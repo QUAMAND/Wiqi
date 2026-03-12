@@ -40,9 +40,15 @@ export const SettingContext = createContext<{
  * 제공자
  */
 export const Provider = ({ children }: { children: ReactNode }) => {
+    const getLang = (): langs => {
+    const saved = localStorage.getItem("lang");
+    if (saved === "ko" || saved === "en" || saved === "ja") return saved;
+    return "ko";
+  };
+
   const [setting, setSetting] = useState<Props>(() => ({
     theme: (localStorage.getItem("theme") as themes) || "dark",
-    lang: (localStorage.getItem("lang") as langs) || "ko",
+    lang: getLang(),
     font: (localStorage.getItem("font") as fonts) || "main",
   }));
 

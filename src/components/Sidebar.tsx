@@ -4,13 +4,13 @@ import { Group } from "./sidebar/Group";
 import { Pages } from "./sidebar/Pages";
 import { Line } from "./common/Line";
 import { Tooltip } from "./common/Tooltip";
-import { SelectState } from "../App";
+import { PageState } from "../App";
 import { useSetting } from "../hooks/Settings";
 
 interface Props {
   open: boolean;
-  page: SelectState
-  onSelect: (state: SelectState) => void;
+  page: PageState
+  onSelect: (state: PageState) => void;
 }
 
 export function Sidebar({ open, page, onSelect }: Props) {

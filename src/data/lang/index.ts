@@ -1,7 +1,8 @@
 import ko from "./ko.json";
 import en from "./en.json";
+import ja from "./ja.json";
 
-const files = { ko, en };
+const files = { ko, en, ja };
 /* 파일 이름을 키로 변환합니다 */
 export type LangKeys = keyof typeof files;
 

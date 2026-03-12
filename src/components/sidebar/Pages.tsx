@@ -1,12 +1,12 @@
-import { SelectState } from "../../App";
+import { PageState } from "../../App";
 import { Line } from "../common/Line";
 import { Group } from "./Group";
 import { Item } from "./Item";
 
 interface Props {
   docs: Page[][];
-  page: SelectState;
-  onSelect: (state: SelectState) => void;
+  page: PageState;
+  onSelect: (state: PageState) => void;
 }
 export function Pages({ docs, page, onSelect }: Props) {
   return (
@@ -30,7 +30,7 @@ interface Page {
   file?: string;
   children?: Page[];
 }
-function render(entry: Page, page: SelectState, onSelect: (url: SelectState) => void, depth = 0): React.ReactNode {
+function render(entry: Page, page: PageState, onSelect: (url: PageState) => void, depth = 0): React.ReactNode {
   {/* Item에 Group이 있을 때 */}
   if (entry.children?.length) {
     return (
