@@ -9,7 +9,7 @@
 외에도 데이터 팩/마인크래프트와 관련한 유용한 도구도 포함되어 있습니다.
 
 ## 주소
-<!-- > [[Jump-to-Datapack](https://QUAMAND.github.io/Jump-to-Datapack)] -->
+https://quamand.github.io/Wiqi
 
 <br/>
 
