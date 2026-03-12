@@ -13,11 +13,12 @@ import "./main.css";
 interface Props {
   sidebar: () => void;
   sidebarOpen: boolean;
+  onSearch: (query: string) => void
+  goHome: () => void;
 }
 
-export function Topbar({ sidebar, sidebarOpen }: Props) {
-  const {t} = useSetting();
-  const { Update } = useSetting();
+export function Topbar({ sidebar, sidebarOpen, onSearch, goHome }: Props) {
+  const { t, Update, setting } = useSetting();
 
   return (
     <header className="Topbar">
@@ -25,7 +26,7 @@ export function Topbar({ sidebar, sidebarOpen }: Props) {
       <div className="Topbar-left">
         <Hamburger open={sidebarOpen} onClick={sidebar} />
         <Tooltip text={t.topbar.home} pos="bottom">
-          <a href="/" style={{textDecoration:"none", marginTop: "4px"}}>
+          <a onClick={goHome} style={{textDecoration:"none", marginTop: "4px"}}>
             <Title title="Wiqi" />
           </a>
         </Tooltip>
@@ -47,11 +48,12 @@ export function Topbar({ sidebar, sidebarOpen }: Props) {
 
       {/* 오른쪽 */}
       <div className="Topbar-right">
-        <Search text={t.topbar.search} />
+        <Search text={t.topbar.search} onSearch={onSearch}/>
 
         <Tooltip text={t.topbar.lang} pos="left">
           <Dropdown
             items={LangItems}
+            value={setting.lang}
             icon="lang"
             onSelect={(k) => Update("lang", k as LangKeys)}
           />
