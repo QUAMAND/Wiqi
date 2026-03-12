@@ -1,0 +1,100 @@
+/* 탑 바 */
+.Topbar {
+  height: auto;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+
+  padding-bottom: 12px;
+  background: var(--bg-deep);
+  border-bottom: 1px solid var(--l-dim);
+
+  flex-shrink: 0;
+  position: relative;
+}
+
+/* 좌 */
+.Topbar-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+/* 우 */
+.Topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  flex-shrink: 0;
+}
+
+/* 사이드 바 */
+.Sidebar {
+  background: var(--bg-deep);
+  border-right: 1px solid var(--l-dim);
+  flex-shrink: 0;
+  transition: width 300ms var(--bound);
+  position: relative;
+}
+.Sidebar.false {
+  width: 0;
+  border-right-color: transparent;
+}
+.Sidebar.true {
+  width: 20%;
+  min-width: 275px;
+  flex-direction: column;
+  overflow-y: auto;
+  display: flex;
+}
+/* 사이드 바 목록 안 쪽 */
+.Sidebar-inner {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+
+  overflow-x: hidden;
+}
+.Sidebar-header {
+  padding: 13px 15px 8px;
+  border-bottom: 1px solid var(--l-dim);
+  flex-shrink: 0;
+}
+.Sidebar-header span {
+  font-size: 1rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+}
+.Sidebar-list {
+  flex: 1;
+  padding: 7px 0;
+}
+
+/* 모바일 화면 ----------------------------- */
+@media (max-width: 875px) {
+  .Topbar {
+    flex-wrap: wrap;
+    height: auto;
+
+    justify-content: center;
+    align-items: center;
+  }
+  .Topbar-right {
+    width: 100%;
+    justify-content: center;
+  }
+  .Topbar-left {
+    order: -1;
+    width: 100%;
+    justify-content: center;
+  }
+  .Topbar-left .Line {
+    opacity: 0;
+  }
+
+  .Search {
+    width: 100%;
+  }
+}

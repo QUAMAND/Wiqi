@@ -1,0 +1,48 @@
+{
+  "lang": "English",
+  "date": "en-US",
+  "title": "Wiqi",
+
+  "minecraft": "Minecraft",
+  "release": "Release",
+  "snapshot": "Snapshot",
+  "credits": "Credits",
+
+  "not_found_doc": "Document not found: ",
+  "not_found_news": "Failed to load news: ",
+
+  "home": {
+    "news": "Latest Minecraft News",
+    "loading": "Loading...",
+    "info_1": "This site is intended for people who are new to data packs and have some coding knowledge.",
+    "info_2": "It aims to help users easily create their own projects and maps using data packs.",
+    "info_3": "It explores data packs and Minecraft in greater depth, covering complex features and advanced usage.",
+    "link": "Useful Links",
+    "link_official": "minecraft.net",
+    "official": "Official Minecraft Website",
+    "link_wiki": "minecraft.wiki",
+    "wiki": "Minecraft Wiki",
+    "admin": "Lead Administrator",
+    "editor": "Editor",
+    "source": "Source Code",
+    "info_4": "Anyone can freely participate in editing the wiki and documentation."
+  },
+
+  "topbar": {
+    "home": "Go to main page",
+    "view_source": "View source code",
+    "random": "Random page",
+    "search": "Search the wiki...",
+    "lang": "Language",
+    "profile": "Profile"
+  },
+
+  "sidebar": {
+    "list": "List",
+    "home": "Home",
+    "docs": "Documentation",
+    "calc": "Calculator",
+    "version": "Minecraft Version",
+    "wiki_credits": "Wiki Credits"
+  }
+}

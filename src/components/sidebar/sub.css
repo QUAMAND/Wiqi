@@ -1,0 +1,100 @@
+/* 사이드 바 그룹 */
+.Group {
+  position: relative;
+  overflow: hidden;
+  width: calc(100% - 7px);
+  padding: 14px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  background: var(--bg-stone);
+  border: 1px solid var(--bg-hover);
+  cursor: pointer;
+  transition: background var(--transition);
+  border-radius: 8px;
+  margin-bottom: 1px;
+}
+/* 그룹 호버 */
+.Group::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--open-glow);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 200ms ease-out;
+}
+.Group:hover::before {
+  transform: scaleX(1);
+}
+
+/* 그룹 선택 */
+.Group.true {
+  border-left: 3px solid var(--open);
+  box-shadow: var(--open-glow);
+}
+
+/* 아이콘 */
+.Group-dropdown {
+  transition: transform 300ms var(--bound);
+}
+.Group-dropdown.true {
+  transform: rotate(180deg);
+}
+.Group-text {
+  white-space: nowrap;
+  font-size: 1rem;
+  color: var(--text-content);
+}
+.Group .Badge {
+  margin-left: auto;
+}
+
+/* 사이드 바 각 항목 */
+.Group-item {
+  position: relative;
+  overflow: hidden;
+  width: calc(100% - 20px);
+  padding: 14px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  background: transparent;
+  border: 1px solid var(--bg-hover);
+  cursor: pointer;
+  border-radius: 16px;
+  margin-bottom: 1px;
+  transition: all .2s;
+}
+/* 아이템 호버 */
+.Group-item::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--bg-bright-alpha);
+  transform: scaleX(0);
+  transform-origin: right;
+}
+.Group-item:hover::before {
+  transform: scaleX(1);
+}
+/* 아이템 선택 */
+.Group-item.select {
+  border-left: 3px solid var(--text-content);
+  background: var(--bg-white-alpha);
+}
+.Group-item-text {
+  font-size: 13px;
+  color: var(--text-second);
+}
+
+/* 아코디언 */
+.Group-items {
+  overflow: hidden;
+  max-height: 0;
+  transition: max-height .1s var(--bound);
+}
+.Group-items.true {
+  transition: max-height .3s ease-in;
+  max-height: 100%;
+}
