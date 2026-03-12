@@ -19,9 +19,9 @@ export interface SelectState {
 export function MarkdownPage({ file }: { file: string }) {
   const {t} = useSetting();
   const [content, setContent] = useState("");
-  
+
   useEffect(() => {
-    fetch(`/documents/${file}`)
+    fetch(`${process.env.PUBLIC_URL}/documents/${file}`)
       .then((res) => res.ok ? res.text() : Promise.reject())
       .then(setContent)
       .catch(() => setContent(`# ${t.not_found_doc}`));
