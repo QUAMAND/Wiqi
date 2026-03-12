@@ -1,6 +1,33 @@
 import { CSSProperties, ReactNode, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import "./index.css";
+import styled from "styled-components";
+
+const transform: Record<string, string> = {
+  top:    "translateX(-50%) translateY(-100%)",
+  bottom: "translateX(-50%)",
+  left:   "translateX(-100%) translateY(-50%)",
+  right:  "translateY(-50%)",
+}
+
+const Style = styled.div`
+  position: relative;
+  display: inline-flex;
+  width: fit-content;
+`
+
+const Box = styled.span<{$pos: string}>`
+  position: fixed;
+  padding: 8px 10px;
+  white-space: nowrap;
+  background-color: var(--bg-backdrop);
+  backdrop-filter: blur(4px);
+  border: 1px solid var(--bg-hover);
+  color: var(--text-content);
+  border-radius: 4px;
+  pointer-events: none;
+  z-index: 9999;
+  transform: ${p => transform[p.$pos]}
+`
 
 interface Props {
   text?: string;
@@ -53,7 +80,7 @@ export function Tooltip({
   }
 
   return (
-    <div
+    <Style
       ref={ref}
       className={`Tooltip ${className}`}
       onMouseEnter={handleMousePointer}
@@ -62,15 +89,10 @@ export function Tooltip({
       {children}
       {visible && 
       createPortal(
-        <span className={`Tooltip-box ${pos}`}
-          style={{
-            top: coords.top,
-            left: coords.left
-          } as CSSProperties}
-        >
+        <Box $pos={pos} style={{top: coords.top, left: coords.left}} className={`Tooltip-box ${pos}`}        >
           {text}
-        </span>, document.body
+        </Box>, document.body
       )}
-    </div>
+    </Style>
   );
 }

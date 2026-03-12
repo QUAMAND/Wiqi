@@ -1,11 +1,54 @@
-import { Badge, BadgeType } from "../common/Badge";
+import styled, { css } from "styled-components";
+
+import { Badge, Badges } from "../common/Badge";
 import { Icon, IconKeys } from "../common/Icon";
-import "./sub.css";
+
+const Style = styled.button<{ $select?: boolean; $depth: number }>`
+  position: relative;
+  overflow: hidden;
+  width: calc(100% - 20px);
+  padding: 14px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  background: ${p => p.$select ? "var(--bg-white-alpha)" : "transparent"};
+  border: 1px solid var(--bg-hover);
+  cursor: pointer;
+  border-radius: 16px;
+  margin-bottom: 1px;
+  margin-left: ${p => p.$depth * 12}px;
+  transition: all .2s;
+
+  ${p => p.$select && css`
+    border-left: 3px solid var(--text-content);
+  `}
+
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: var(--bg-bright-alpha);
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 200ms ease-out;
+  }
+
+  &:hover::before {
+    transform: scaleX(1);
+  }
+`
+const Text = styled.span<{ $fontSize?: string; $color?: string }>`
+  font-size: ${p => p.$fontSize ?? "13px"};
+  color: ${p => p.$color ?? "var(--text-second)"};
+`
+const StyledBadge = styled(Badge)`
+  margin-left: auto;
+`
 
 interface Props {
   text: string;
   icon?: IconKeys;
-  badge?: BadgeType;
+  badge?: Badges;
   select?: boolean;
   depth?: number;
   fontSize?: string;
@@ -26,16 +69,12 @@ export function Item({
   className = "",
 }: Props) {
   return (
-    <button
-      className={`Group-item ${select ? "select" : ""} ${className}`}
-      style={{ marginLeft: depth * 12 }}
-      onClick={onClick}
-    >
+    <Style $select={select} $depth={depth} className={className} onClick={onClick}>
       {icon && <Icon size={13} icon={icon} />}
 
-      <span className="Group-item-text" style={{ fontSize, color: textColor }}>{text}</span>
+      <Text $fontSize={fontSize} $color={textColor}>{text}</Text>
 
-      {badge !== undefined && <Badge badge={badge} className="Group-item-badge" />}
-    </button>
+      {badge !== undefined && <StyledBadge badge={badge} />}
+    </Style>
   );
 }
