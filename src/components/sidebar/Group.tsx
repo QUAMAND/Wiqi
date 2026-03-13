@@ -1,8 +1,9 @@
 import { ReactNode, useState } from "react";
-import styled, {css} from "styled-components";
+import styled, { css } from "styled-components";
 
 import { Badge } from "../common/Badge";
 import { Icon, IconKeys } from "../common/Icon";
+import { Page } from "./Item";
 
 const Style = styled.button<{ $open: boolean; $color?: string; $glow?: string }>`
   position: relative;
@@ -15,9 +16,9 @@ const Style = styled.button<{ $open: boolean; $color?: string; $glow?: string }>
   background: var(--bg-stone);
   border: 1px solid var(--bg-hover);
   cursor: pointer;
-  transition: background var(--transition);
   border-radius: 8px;
   margin-bottom: 1px;
+  transition: background var(--transition);
 
   &::before {
     content: "";
@@ -28,10 +29,7 @@ const Style = styled.button<{ $open: boolean; $color?: string; $glow?: string }>
     transform-origin: left;
     transition: transform 200ms ease-out;
   }
-
-  &:hover::before {
-    transform: scaleX(1);
-  }
+  &:hover::before { transform: scaleX(1); }
 
   ${p => p.$open && css`
     border-left: 3px solid ${p.$color};
@@ -43,21 +41,16 @@ const Text = styled.span<{ $fontSize: string }>`
   font-size: ${p => p.$fontSize};
   color: var(--text-content);
 `
-const DropIcon = styled(Icon)<{ $open: boolean }>`  
+const DropIcon = styled(Icon)<{ $open: boolean }>`
   transition: transform 300ms var(--bound);
   transform: ${p => p.$open ? "rotate(180deg)" : "rotate(0deg)"};
 `
-const StyledBadge = styled(Badge)`
-  margin-left: auto;
-`
+const StyledBadge = styled(Badge)`margin-left: auto;`
 
 const Items = styled.div<{ $open: boolean }>`
   overflow: hidden;
   max-height: ${p => p.$open ? "100%" : "0"};
-  transition: ${p => p.$open
-    ? "max-height .3s ease-in"
-    : "max-height .1s var(--bound)"
-  };
+  transition: ${p => p.$open ? "max-height .3s ease-in" : "max-height .1s var(--bound)"};
 `
 
 interface Props {
@@ -66,48 +59,40 @@ interface Props {
   count?: number;
   color?: string;
   glow?: string;
-  depth?: number;
   fontSize?: string;
   children?: ReactNode;
   onClick?: () => void;
   className?: string;
 }
 
-export function Group({
-  text,
-  icon,
-  count,
-  color,
-  glow,
-  depth = 0,
-  fontSize = "1rem",
-  children,
-  onClick,
-  className = "",
-}: Props) {
+export function Group({ text, icon, count, color, glow, fontSize = "1rem", children, onClick, className = "" }: Props) {
   const [open, setOpen] = useState(false);
 
   return (
-    <div style={{marginLeft: depth * 9}}>
-      <Style
-        $open={open}
-        $color={color}
-        $glow={glow}
-        className={className}
-        onClick={() => setOpen((v) => !v)}
-      >
-        {icon && <Icon size={20} color={color} icon={icon} />}
-
+    <>
+      <Style $open={open} $color={color} $glow={glow} className={className}
+        onClick={() => { setOpen((v) => !v); onClick?.(); }}>
+        {icon && <Icon size={24} color={color} icon={icon} />}
         <Text $fontSize={fontSize}>{text}</Text>
-
-        {count !== undefined && <StyledBadge badge={count} />}
-
+        {count && <StyledBadge badge={count} />}
         <DropIcon icon="dropdown" size={20} $open={open} />
       </Style>
-
       <Items $open={open}>
         {children}
       </Items>
-    </div>
+    </>
   );
+}
+
+/** 그룹 하위 페이지 수 계산 */
+export function CountingChildren(pages: Page[]): number {
+  const files = new Set<string>();
+  function walk(entries: Page[]) {
+    for (const entry of entries) {
+      if (entry.file) files.add(entry.file);
+      if (entry.children) walk(entry.children);
+    }
+  }
+  walk(pages);
+  return files.size;
 }

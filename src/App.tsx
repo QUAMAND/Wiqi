@@ -1,63 +1,133 @@
+import { useNavigate, useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
-import ReactMarkdown from "react-markdown"
-import { Provider, useSetting } from "./hooks/Settings";
-import { DocNode, SearchResult } from "./components/SearchResult";
+import ReactMarkdown from "react-markdown";
+import rehypeSlug from "rehype-slug";
+import rehypeAutolink from "rehype-autolink-headings";
+// @ts-ignore
+import rehypeRaw from "rehype-raw";
 
+import { Provider, useSetting } from "./hooks/Settings";
+import { useFetch } from "./hooks/useFetch";
+import { SearchResult } from "./components/SearchResult";
 import { Sidebar } from "./components/Sidebar";
 import { Topbar } from "./components/Topbar";
 import { Home } from "./components/Home";
+import { pathToPage, pageToPath, urlToFile, getRandomDocUrl, getNextPrevDocsSkipSameFile } from "./utils/routing";
+import { fetchText } from "./utils/api";
+import { PageState } from "./types";
 
 import "./styles.css";
-import docs from "./data/pages.json"
+import "./markdown.css";
 
-/* 페이지 종류를 설정합니다. */
-type PageType = "home" | "markdown" | "calc" | "editor" | "search";
+export type { PageState };
 
-export interface PageState {
-  type: PageType;
-  url?: string;
-  file?: string;
-  query?: string;
-}
+function Content() {
+  const navi = useNavigate();
+  const location = useLocation();
+  const { t } = useSetting();
 
-/* 마크다운 파일 찾기 */
-export function MarkdownPage({ file }: { file: string }) {
-  const {t} = useSetting();
-  const [content, setContent] = useState("");
+  const [sidebar, openSidebar] = useState(false);
+  const [page, setPage] = useState<PageState>(() => pathToPage(location.pathname, location.search));
 
   useEffect(() => {
-    fetch(`${process.env.PUBLIC_URL}/documents/${file}`)
-      .then((res) => res.ok ? res.text() : Promise.reject())
-      .then(setContent)
-      .catch(() => setContent(`# ${t.not_found_doc}`));
-  }, [file]);
+    setPage(pathToPage(location.pathname, location.search));
+  }, [location]);
 
-  return <ReactMarkdown>{content}</ReactMarkdown>;
+  const handleSelect = (state: PageState) => {
+    const filled: PageState = state.type === "markdown" && !state.file
+      ? { ...state, file: urlToFile(state.url!) }
+      : state;
+
+    const newPath = pageToPath(filled);
+    if (newPath === location.pathname + location.search) return;
+
+    setPage(filled);
+    navi(newPath);
+  };
+
+  const handleRandom = () => {
+    const randomUrl = getRandomDocUrl();
+    if (randomUrl) {
+      handleSelect({ type: "markdown", url: randomUrl });
+    }
+  };
+
+  return (
+    <>
+      <Topbar
+        sidebarOpen={sidebar}
+        sidebar={() => openSidebar((p) => !p)}
+        onSearch={(query) => handleSelect({ type: "search", query })}
+        goHome={() => handleSelect({ type: "home" })}
+        onRandom={handleRandom}
+      />
+      <div className="Main">
+        <Sidebar open={sidebar} page={page} onSelect={handleSelect} />
+        <div className="App">
+          {page.type === "home"     && <Home />}
+          {page.type === "markdown" && <MarkdownPage file={page.file!} url={page.url!} onSelect={handleSelect} />}
+          {page.type === "calc"     && <p>{t.pages.calc}</p>}
+          {page.type === "editor"   && <p>{t.pages.editor}</p>}
+          {page.type === "search"   && <SearchResult query={page.query!} onSelect={handleSelect} />}
+        </div>
+      </div>
+    </>
+  );
 }
 
 export default function App() {
-  const [sidebar, openSidebar] = useState(false);
-  const [page, setPage] = useState<PageState>({ type: "home" });
-
-  const handleSearch = (query: string) => {
-    setPage({type: "search", query})
-  }
-
   return (
     <Provider>
-      <Topbar sidebarOpen={sidebar} sidebar={() => openSidebar((p) => !p)} onSearch={handleSearch} goHome={() => setPage({type:"home"})}/>
-
-      <div className="Main">
-        <Sidebar open={sidebar} page={page} onSelect={setPage}/>
-
-        <div className="App">
-          {page.type === "home"     && <Home/>}
-          {page.type === "markdown" && <MarkdownPage file={page.file!} />}
-          {page.type === "calc"     && <p>계산기</p>}
-          {page.type === "editor"   && <p>에디터</p>}
-          {page.type === "search"   && (<SearchResult query={page.query!} docs={docs as DocNode[][]} onSelect={setPage}/>)}
-        </div>
-      </div>
+      <Content />
     </Provider>
+  );
+}
+
+export function MarkdownPage({ file, url, onSelect }: { file: string; url: string; onSelect: (state: PageState) => void }) {
+  const { t } = useSetting();
+  const { data: content = "", error } = useFetch(
+    () => fetchText(`${process.env.PUBLIC_URL}/documents/${file}`),
+    [file]
+  );
+
+  const finalContent = error ? `# ${t.not_found_doc}` : content;
+  const { next, prev } = getNextPrevDocsSkipSameFile(url);
+
+  useEffect(() => {
+    if (!finalContent) return;
+    const hash = decodeURIComponent(window.location.hash.slice(1));
+    if (!hash) return;
+    setTimeout(() => document.getElementById(hash)?.scrollIntoView({ behavior: "smooth" }), 50);
+  }, [finalContent]);
+
+  return (
+    <>
+      <div className="markdown">
+        <ReactMarkdown
+          rehypePlugins={[rehypeSlug, [rehypeAutolink, { behavior: "wrap" }], rehypeRaw]}
+        >
+          {finalContent}
+        </ReactMarkdown>
+      </div>
+
+      <div className="markdown-nav">
+        {prev && (
+          <button
+            onClick={() => onSelect({ type: "markdown", url: prev.url })}
+            className="markdown-nav-btn markdown-nav-prev"
+          >
+            ← {prev.title}
+          </button>
+        )}
+        {next && (
+          <button
+            onClick={() => onSelect({ type: "markdown", url: next.url })}
+            className="markdown-nav-btn markdown-nav-next"
+          >
+            {next.title} →
+          </button>
+        )}
+      </div>
+    </>
   );
 }

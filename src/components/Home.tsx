@@ -2,37 +2,28 @@ import { useEffect, useState } from "react";
 import { Icon } from "./common/Icon";
 import "./home.css";
 import { useSetting } from "../hooks/Settings";
+import { useFetch } from "../hooks/useFetch";
+import { fetchData } from "../utils/api";
+import { NewsItem } from "../types";
 import { Tooltip } from "./common/Tooltip";
-
-interface NewsItem {
-  title: string;
-  version: string;
-  type: string;
-  date: string;
-  shortText: string;
-  image: { url: string; title: string };
-  contentPath: string;
-}
 
 function HomeNews() {
   const {t} = useSetting();
   const [news, setNews] = useState<NewsItem[]>([]);
-  const [loading, setLoading] = useState(true);
+
+  const { data, loading } = useFetch(() =>
+    fetchData<{ entries: NewsItem[] }>("https://launchercontent.mojang.com/v2/javaPatchNotes.json")
+  );
 
   useEffect(() => {
-    fetch("https://launchercontent.mojang.com/v2/javaPatchNotes.json")
-      .then((res) => res.json())
-      .then((data) => {
-        const sorted = [...data.entries]
-          .sort((a: NewsItem, b: NewsItem) =>
-            new Date(b.date) > new Date(a.date) ? 1 : -1
-          )
-          .slice(0, 3);
-        setNews(sorted);
-        setLoading(false);
-      })
-      .catch(() => setLoading(false));
-  }, []);
+    if (!data) return;
+    const sorted = [...data.entries]
+      .sort((a: NewsItem, b: NewsItem) =>
+        new Date(b.date) > new Date(a.date) ? 1 : -1
+      )
+      .slice(0, 3);
+    setNews(sorted);
+  }, [data]);
 
   return (
     <section className="Home-section">

@@ -45,8 +45,13 @@
     "home": "홈",
     "docs": "문서",
     "calc": "계산기",
+    "edit": "편집기",
     "version": "위키 마인크래프트 버전",
     "wiki_credits": "위키 크레딧"
+  },
+  "pages": {
+    "calc": "계산기",
+    "editor": "에디터"
   },
   "search": {
     "result": "검색 결과",

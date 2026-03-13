@@ -1,51 +1,59 @@
+import { useSetting } from "../hooks/Settings";
+import basic from "../data/page/docs/basic.json";
+import advanced from "../data/page/docs/advanced.json";
+import homes from "../data/page/homes.json";
+
 import { Footer } from "./common/Footer";
-import docs from "../data/pages.json"
-import { Group } from "./sidebar/Group";
-import { Pages } from "./sidebar/Pages";
+import { Item, OperPages } from "./sidebar/Item";
+import { CountingChildren, Group } from "./sidebar/Group";
 import { Line } from "./common/Line";
 import { Tooltip } from "./common/Tooltip";
-import { PageState } from "../App";
-import { useSetting } from "../hooks/Settings";
+import { PageState } from "../types";
 
 interface Props {
   open: boolean;
-  page: PageState
+  page: PageState;
   onSelect: (state: PageState) => void;
 }
 
 export function Sidebar({ open, page, onSelect }: Props) {
-  const {t} = useSetting();
+  const { t } = useSetting();
 
   return (
-    <>
-      {/* 실제 사이드 바*/}
-      <div className={`Sidebar ${open}`}>
-        <div className="Sidebar-inner">
-          <div className="Sidebar-header">
-            <span>{t.sidebar.list}</span>
-          </div>
+    <div className={`Sidebar ${open}`}>
+      <div className="Sidebar-inner">
 
-          <nav className="Sidebar-list">
-            <Group text={t.sidebar.home} icon="home" color="var(--accent-red)" glow="var(--accent-glow-red)"
-            onClick={() => onSelect({type: "home"})}></Group>
+        <div className="Sidebar-header">
+          <span>{t.sidebar.list}</span>
+        </div>
 
-            <Group text={t.sidebar.docs} icon="docs" color="var(--accent-gold)" glow="var(--accent-glow-gold)">
-              <Pages docs={docs} page={page} onSelect={onSelect} />
-            </Group>
+        <nav className="Sidebar-list">
+          <Group text={t.sidebar.home} icon="home" color="var(--accent-red)" glow="var(--accent-glow-red)" count={CountingChildren(homes)} onClick={() => onSelect({ type: "home" })}>
+            <Item icon="home" text="홈 페이지" onClick={() => onSelect({ type: "home" })} />
+          </Group>
 
-            <Group text={t.sidebar.calc} icon="calc" color="var(--accent-green)" glow="var(--accent-glow-green)"></Group>
-          </nav>
-        <Line width={292} height={1}/>
+          <Group text={t.sidebar.docs} icon="docs" color="var(--accent-gold)" glow="var(--accent-glow-gold)" count={CountingChildren([...basic, ...advanced])}>
+            <OperPages docs={basic} page={page} onSelect={onSelect} />
+            <Line width={0} height={36} />
+            <OperPages docs={advanced} page={page} onSelect={onSelect} />
+          </Group>
+
+          <Group text={t.sidebar.calc} icon="calc" color="var(--accent-green)" glow="var(--accent-glow-green)" />
+          <Group text={t.sidebar.edit} icon="edit" color="var(--accent-blue)" glow="var(--accent-glow-blue)" />
+        </nav>
+
+        <Line width={292} height={1} />
 
         <Tooltip text={t.sidebar.version} pos="right" len={2}>
-          <Footer text="Minecraft 1.21.11" color="green"/>
+          <Footer text="Minecraft 1.21.11" color="green" />
+        </Tooltip>
+        <Tooltip text={t.sidebar.wiki_credits} pos="right" len={2}>
+          <Footer text={t.credits} color="green" />
         </Tooltip>
 
-        <Tooltip text={t.sidebar.wiki_credits} pos="right" len={2}>
-          <Footer text={t.credits} color="green"/>
-        </Tooltip>
-        </div>
+        <br />
+
       </div>
-    </>
+    </div>
   );
 }

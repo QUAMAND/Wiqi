@@ -45,8 +45,13 @@
     "home": "ホーム",
     "docs": "ドキュメント",
     "calc": "計算機",
+    "edit": "エディタ",
     "version": "Wiki マインクラフトバージョン",
     "wiki_credits": "Wiki クレジット"
+  },
+  "pages": {
+    "calc": "計算機",
+    "editor": "エディタ"
   },
   "search": {
     "result": "検索結果",

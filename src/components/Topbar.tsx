@@ -13,43 +13,34 @@ import "./main.css";
 interface Props {
   sidebar: () => void;
   sidebarOpen: boolean;
-  onSearch: (query: string) => void
+  onSearch: (query: string) => void;
   goHome: () => void;
+  onRandom: () => void;
 }
 
-export function Topbar({ sidebar, sidebarOpen, onSearch, goHome }: Props) {
+export function Topbar({ sidebar, sidebarOpen, onSearch, goHome, onRandom }: Props) {
   const { t, Update, setting } = useSetting();
 
   return (
     <header className="Topbar">
-      {/* 왼쪽 */}
       <div className="Topbar-left">
         <Hamburger open={sidebarOpen} onClick={sidebar} />
         <Tooltip text={t.topbar.home} pos="bottom">
-          <a onClick={goHome} style={{textDecoration:"none", marginTop: "4px"}}>
+          <a onClick={goHome} style={{ textDecoration: "none", marginTop: "4px" }}>
             <Title title="Wiqi" />
           </a>
         </Tooltip>
-
         <Line />
-
         <Tooltip text={t.topbar.view_source} pos="bottom">
-          <Button
-            text="View-source"
-            icon={<Icon icon="source" size={20} />}
-            action="source"
-          />
+          <Button text="View-source" icon={<Icon icon="source" size={20} />} action="source" />
         </Tooltip>
-
         <Tooltip text={t.topbar.random} pos="bottom">
-          <Button icon={<Icon icon="shuffle" size={20} />} />
+          <Button icon={<Icon icon="shuffle" size={20} />} onClick={onRandom} />
         </Tooltip>
       </div>
 
-      {/* 오른쪽 */}
       <div className="Topbar-right">
-        <Search text={t.topbar.search} onSearch={onSearch}/>
-
+        <Search text={t.topbar.search} onSearch={onSearch} />
         <Tooltip text={t.topbar.lang} pos="left">
           <Dropdown
             items={LangItems}
@@ -58,12 +49,10 @@ export function Topbar({ sidebar, sidebarOpen, onSearch, goHome }: Props) {
             onSelect={(k) => Update("lang", k as LangKeys)}
           />
         </Tooltip>
-
         <Tooltip text={t.topbar.profile} pos="left">
           <Button icon={<Icon icon="profile" size={20} />} />
         </Tooltip>
-
-        <a href="https://github.com/QUAMAND/Wiqi" style={{marginTop: "4px"}}>
+        <a href="https://github.com/QUAMAND/Wiqi" style={{ marginTop: "4px" }}>
           <Icon icon="github" size={20} color="var(--bg-raised)" />
         </a>
       </div>

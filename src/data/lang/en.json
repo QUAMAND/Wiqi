@@ -45,8 +45,13 @@
     "home": "Home",
     "docs": "Documents",
     "calc": "Calculator",
+    "edit": "Editor",
     "version": "Wiki Minecraft Version",
     "wiki_credits": "Wiki Credits"
+  },
+  "pages": {
+    "calc": "Calculator",
+    "editor": "Editor"
   },
   "search": {
     "result": "Search Results",
