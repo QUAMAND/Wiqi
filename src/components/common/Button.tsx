@@ -18,7 +18,6 @@ const Style = styled.button`
 `
 const Text = styled.span<{$color: string}>`
   font-family: "code";
-  margin-left: 2px;
   color: ${p => p.$color};
   border-radius: var(--radius-s);
   transition: all var(--transition);

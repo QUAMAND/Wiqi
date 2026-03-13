@@ -7,13 +7,14 @@ import { fetchData } from "../utils/api";
 import { NewsItem } from "../types";
 import { Tooltip } from "./common/Tooltip";
 
-function HomeNews() {
+interface HomeNewsProps {
+  data: { entries: NewsItem[] } | null;
+  loading: boolean;
+}
+
+function HomeNews({ data, loading }: HomeNewsProps) {
   const {t} = useSetting();
   const [news, setNews] = useState<NewsItem[]>([]);
-
-  const { data, loading } = useFetch(() =>
-    fetchData<{ entries: NewsItem[] }>("https://launchercontent.mojang.com/v2/javaPatchNotes.json")
-  );
 
   useEffect(() => {
     if (!data) return;
@@ -35,9 +36,8 @@ function HomeNews() {
       ) : (
         <div className="Home-news">
           {news.map((item) => (
-            <Tooltip text={item.version}>
+            <Tooltip text={item.version} key={item.version}>
               <a
-                key={item.version}
                 href={`https://minecraft.wiki/w/Java_Edition_${item.version}`}
                 target="_blank"
                 rel="noreferrer"
@@ -80,8 +80,73 @@ function HomeNews() {
   );
 }
 
+function HomeVersions({ data, loading }: HomeNewsProps) {
+  const {t} = useSetting();
+  const [versions, setVersions] = useState<NewsItem[]>([]);
+  const [isExpanded, setIsExpanded] = useState(false);
+
+  useEffect(() => {
+    if (!data) return;
+    const sorted = [...data.entries]
+      .sort((a: NewsItem, b: NewsItem) =>
+        new Date(b.date) > new Date(a.date) ? 1 : -1
+      )
+      .slice(0, isExpanded ? 64 : 6);
+    setVersions(sorted);
+  }, [data, isExpanded]);
+
+  return (
+    <section className="Home-section">
+      <h2>{t.home.versions}</h2>
+      {loading ? (
+        <p className="Home-loading">{t.home.loading}</p>
+      ) : (
+        <div className="Home-versions-container">
+          <div className="Home-versions">
+            <div className="Home-versions-graph" />
+            {versions.map((item) => (
+              <a
+                key={item.version}
+                href={`https://minecraft.wiki/w/Java_Edition_${item.version}`}
+                target="_blank"
+                rel="noreferrer"
+                className="Home-version-item"
+              >
+                <Icon
+                  icon="git"
+                  size={16}
+                  className={`Home-version-icon ${item.type}`}
+                  color={item.type === "release" ? "var(--accent-green)" : "var(--accent-red)"}
+                />
+                <div className="Home-version-content">
+                  <span className="Home-version-tag">{item.version}</span>
+                  <span className="Home-version-title">{item.title}</span>
+                  <span className="Home-version-date">
+                    {new Date(item.date).toLocaleDateString(`${t.date}`)}
+                  </span>
+                </div>
+              </a>
+            ))}
+          </div>
+          <button
+            className="Home-versions-more"
+            onClick={() => setIsExpanded(!isExpanded)}
+          >
+            <Icon icon="dropdown" size={20} style={{ transform: isExpanded ? "rotate(180deg)" : "none", transition: "transform 0.3s" }} />
+            <span>{isExpanded ? "0..." : "64..."}</span>
+          </button>
+        </div>
+      )}
+    </section>
+  );
+}
+
 export function Home() {
   const {t} = useSetting();
+  const { data, loading } = useFetch(() =>
+    fetchData<{ entries: NewsItem[] }>("https://launchercontent.mojang.com/v2/javaPatchNotes.json")
+  );
+
   return (
     <div className="Home">
 
@@ -99,7 +164,7 @@ export function Home() {
         </div>
       </section>
 
-      <HomeNews />
+      <HomeNews data={data} loading={loading} />
 
       <section className="Home-section">
         <h2>{t.home.link}</h2>
@@ -132,6 +197,8 @@ export function Home() {
       </section>
 
       <br />
+
+      <HomeVersions data={data} loading={loading} />
 
       <section className="Home-section Home-credits">
         <h2>{t.credits}</h2>

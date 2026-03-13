@@ -1,5 +1,6 @@
 import { useNavigate, useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
+import styled, { createGlobalStyle } from "styled-components";
 import ReactMarkdown from "react-markdown";
 import rehypeSlug from "rehype-slug";
 import rehypeAutolink from "rehype-autolink-headings";
@@ -11,6 +12,7 @@ import { useFetch } from "./hooks/useFetch";
 import { SearchResult } from "./components/SearchResult";
 import { Sidebar } from "./components/Sidebar";
 import { Topbar } from "./components/Topbar";
+import { NavControl } from "./components/common/NavControl";
 import { Home } from "./components/Home";
 import { pathToPage, pageToPath, urlToFile, getRandomDocUrl, getNextPrevDocsSkipSameFile } from "./utils/routing";
 import { fetchText } from "./utils/api";
@@ -18,13 +20,28 @@ import { PageState } from "./types";
 
 import "./styles.css";
 import "./markdown.css";
+import { Icon } from "./components/common/Icon";
+
+const GlobalLayoutStyle = createGlobalStyle<{ $fixed?: boolean }>`
+  ${p => p.$fixed ? `
+    .Sidebar {
+      height: 100% !important;
+      overflow-y: auto !important;
+    }
+  ` : `
+    .Sidebar {
+      position: sticky !important;
+      top: 0;
+    }
+  `}
+`;
 
 export type { PageState };
 
 function Content() {
   const navi = useNavigate();
   const location = useLocation();
-  const { t } = useSetting();
+  const { t, setting } = useSetting();
 
   const [sidebar, openSidebar] = useState(false);
   const [page, setPage] = useState<PageState>(() => pathToPage(location.pathname, location.search));
@@ -54,6 +71,7 @@ function Content() {
 
   return (
     <>
+      <GlobalLayoutStyle $fixed={setting.fixed} />
       <Topbar
         sidebarOpen={sidebar}
         sidebar={() => openSidebar((p) => !p)}
@@ -71,6 +89,7 @@ function Content() {
           {page.type === "search"   && <SearchResult query={page.query!} onSelect={handleSelect} />}
         </div>
       </div>
+      {setting.nav && <NavControl />}
     </>
   );
 }
@@ -116,7 +135,7 @@ export function MarkdownPage({ file, url, onSelect }: { file: string; url: strin
             onClick={() => onSelect({ type: "markdown", url: prev.url })}
             className="markdown-nav-btn markdown-nav-prev"
           >
-            ← {prev.title}
+            <Icon icon="arrow" style={{transform:"rotate(180deg)"}}/> {prev.title}
           </button>
         )}
         {next && (
@@ -124,7 +143,7 @@ export function MarkdownPage({ file, url, onSelect }: { file: string; url: strin
             onClick={() => onSelect({ type: "markdown", url: next.url })}
             className="markdown-nav-btn markdown-nav-next"
           >
-            {next.title} →
+            {next.title} <Icon icon="arrow"/>
           </button>
         )}
       </div>
