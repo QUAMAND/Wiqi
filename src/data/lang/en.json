@@ -27,6 +27,7 @@
     "official": "Minecraft Official Website",
     "link_wiki": "minecraft.wiki",
     "wiki": "Minecraft Wiki",
+    "versions": "Latest Version History",
     "admin": "Administrator",
     "editor": "Editor",
     "source": "Source Code",
@@ -38,7 +39,14 @@
     "random": "Random page",
     "search": "Search the wiki...",
     "lang": "Language",
-    "profile": "Profile"
+    "profile": "Profile",
+    "theme": "Theme",
+    "light": "Light Mode",
+    "dark": "Dark Mode",
+    "nav": "Navigation Control",
+    "fixed": "Fixed Topbar",
+    "top": "To Top",
+    "bottom": "To Bottom"
   },
   "sidebar": {
     "list": "List",

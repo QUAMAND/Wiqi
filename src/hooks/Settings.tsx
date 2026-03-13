@@ -16,6 +16,8 @@ interface Props {
   theme: themes;
   lang: langs;
   font: fonts;
+  nav: boolean;
+  fixed: boolean;
 }
 
 /* 실제로 사용하는 설정 */
@@ -50,6 +52,8 @@ export const Provider = ({ children }: { children: ReactNode }) => {
     theme: (localStorage.getItem("theme") as themes) || "dark",
     lang: getLang(),
     font: (localStorage.getItem("font") as fonts) || "main",
+    nav: localStorage.getItem("nav") !== "false",
+    fixed: localStorage.getItem("fixed") !== "false",
   }));
 
   const t = getI18n(setting.lang);
@@ -60,8 +64,10 @@ export const Provider = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     for (const k in setting) {
-      localStorage.setItem(k, setting[k as keyof Props]);
+      localStorage.setItem(k, String(setting[k as keyof Props]));
     }
+    // 테마 적용
+    document.documentElement.setAttribute("data-theme", setting.theme);
   }, [setting]);
 
   return (

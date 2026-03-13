@@ -27,6 +27,7 @@
     "official": "マインクラフト公式サイト",
     "link_wiki": "minecraft.wiki",
     "wiki": "マインクラフトWiki",
+    "versions": "最新バージョンの履歴",
     "admin": "管理者",
     "editor": "編集者",
     "source": "ソースコード",
@@ -38,7 +39,14 @@
     "random": "ランダムページ",
     "search": "Wikiを検索...",
     "lang": "言語",
-    "profile": "プロフィール"
+    "profile": "プロフィール",
+    "theme": "テーマ",
+    "light": "ライト",
+    "dark": "ダーク",
+    "nav": "ナビゲーションコントロール",
+    "fixed": "トップバーを固定",
+    "top": "トップへ",
+    "bottom": "ボトムへ"
   },
   "sidebar": {
     "list": "一覧",

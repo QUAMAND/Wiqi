@@ -27,6 +27,7 @@
     "official": "마인크래프트 공식 사이트",
     "link_wiki": "minecraft.wiki",
     "wiki": "마인크래프트 위키",
+    "versions": "최신 버전 기록",
     "admin": "총 관리자",
     "editor": "편집자",
     "source": "소스 코드",
@@ -38,7 +39,14 @@
     "random": "무작위 페이지",
     "search": "위키에서 검색...",
     "lang": "언어",
-    "profile": "프로필"
+    "profile": "프로필",
+    "theme": "테마",
+    "light": "라이트 모드",
+    "dark": "다크 모드",
+    "nav": "네비게이션 컨트롤",
+    "fixed": "상단 바 고정",
+    "top": "맨 위로",
+    "bottom": "맨 아래로"
   },
   "sidebar": {
     "list": "목록",

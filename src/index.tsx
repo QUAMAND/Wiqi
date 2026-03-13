@@ -8,7 +8,6 @@ const root = ReactDOM.createRoot(rootElement);
 
 root.render(
   <React.StrictMode>
-    /** 메인 주소를 /Wiqi로 합니다 */
     <BrowserRouter basename="/Wiqi">
       <App />
     </BrowserRouter>

@@ -38,8 +38,8 @@ export function Sidebar({ open, page, onSelect }: Props) {
             <OperPages docs={advanced} page={page} onSelect={onSelect} />
           </Group>
 
-          <Group text={t.sidebar.calc} icon="calc" color="var(--accent-green)" glow="var(--accent-glow-green)" />
-          <Group text={t.sidebar.edit} icon="edit" color="var(--accent-blue)" glow="var(--accent-glow-blue)" />
+          <Group text={t.sidebar.calc} icon="calc" color="var(--accent-green)" glow="var(--accent-glow-green)" count={1}/>
+          <Group text={t.sidebar.edit} icon="edit" color="var(--accent-blue)" glow="var(--accent-glow-blue)" count={1}/>
         </nav>
 
         <Line width={292} height={1} />

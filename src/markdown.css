@@ -5,7 +5,7 @@
   text-align: left;
 }
 
-/* 제목 ================================================== */
+/* 제목  */
 .markdown h1 {
   font-family: "title";
   font-size: 2.5rem;
@@ -52,7 +52,7 @@
   color: var(--accent-orange);
 }
 
-/* 본문 텍스트 ================================================== */
+/* 본문 텍스트  */
 .markdown p {
   font-size: 1rem;
   line-height: 1.75;
@@ -61,7 +61,7 @@
   letter-spacing: 0.3px;
 }
 
-/* 링크 ================================================== */
+/* 링크  */
 .markdown a {
   color: var(--accent-blue);
   text-decoration: none;
@@ -76,7 +76,7 @@
   color: var(--accent-blue);
 }
 
-/* 코드 ================================================== */
+/* 코드  */
 .markdown code {
   font-family: "code";
   font-size: 0.9rem;
@@ -106,7 +106,7 @@
   font-size: 0.9rem;
 }
 
-/* 리스트 ================================================== */
+/* 리스트  */
 .markdown ul,
 .markdown ol {
   margin: 16px 0;
@@ -142,7 +142,7 @@
   margin: 8px 0;
 }
 
-/* 인용문 ================================================== */
+/* 인용문  */
 .markdown blockquote {
   border-left: 4px solid var(--accent-blue);
   background-color: var(--bg-raised);
@@ -158,7 +158,7 @@
   padding: 0;
 }
 
-/* 가로선 ================================================== */
+/* 가로선  */
 .markdown hr {
   border: none;
   height: 2px;
@@ -167,7 +167,7 @@
   border-radius: 1px;
 }
 
-/* 테이블 ================================================== */
+/* 테이블  */
 .markdown table {
   width: 100%;
   border-collapse: collapse;
@@ -196,7 +196,7 @@
   background-color: var(--bg-raised);
 }
 
-/* 이미지 ================================================== */
+/* 이미지  */
 .markdown img {
   max-width: 100%;
   height: auto;
@@ -205,7 +205,7 @@
   border: 1px solid var(--l-sub);
 }
 
-/* 강조 ================================================== */
+/* 강조  */
 .markdown strong {
   font-family: "main-bold";
   font-weight: 700;
@@ -222,7 +222,7 @@
   text-decoration: line-through;
 }
 
-/* 해시 링크 (제목 자동 링크) ================================================== */
+/* 해시 링크 (제목 자동 링크)  */
 .markdown h1 a,
 .markdown h2 a,
 .markdown h3 a,
@@ -257,7 +257,7 @@
   color: var(--accent-blue);
 }
 
-/* 마크 (검색 결과 하이라이트) ================================================== */
+/* 마크 (검색 결과 하이라이트)  */
 .markdown mark {
   background-color: var(--accent-glow-gold);
   color: var(--accent-gold);
@@ -266,7 +266,7 @@
   font-weight: 500;
 }
 
-/* 네비게이션 버튼 ================================================== */
+/* 네비게이션 버튼  */
 .markdown-nav {
   display: flex;
   gap: 16px;
@@ -285,8 +285,8 @@
   font-size: 1rem;
   font-family: "main";
   color: var(--text-second);
-  background-color: var(--bg-stone);
-  border: 1px solid var(--l-dim);
+  background-color: var(--bg-backdrop);
+  border: 1px solid var(--l-sub);
   border-radius: var(--radius-m);
   cursor: pointer;
   transition: all var(--transition);

@@ -11,7 +11,6 @@ const DropdownButton = styled.button`
   white-space: nowrap;
   display: flex;
   align-items: center;
-  gap: 5px;
   padding: 4px 9px;
   height: 32px;
   background: var(--bg-cave);
@@ -31,7 +30,7 @@ const DropdownList = styled.ul`
   position: absolute;
   padding-inline-start: 0;
   width: 100%;
-  top: calc(100% + 4px);
+  top: calc(100% - 10px);
   background: var(--bg-stone);
   border: 1px solid var(--l-sub);
   border-radius: var(--radius-m);
@@ -83,7 +82,7 @@ export function Dropdown({ icon, value, items, onSelect }: Props) {
   return (
     <Style>
       <DropdownButton onClick={() => setOpen((v) => !v)}>
-        {icon && <Icon size={16} icon={icon} />}
+        {icon && <Icon size={16} icon={icon} style={{marginRight:"4px"}}/>}
         {selected?.value}
         <Icon
           icon="dropdown"
