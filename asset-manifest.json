@@ -1,13 +1,13 @@
 {
   "files": {
-    "main.css": "/Wiqi/static/css/main.9059ae3e.css",
-    "main.js": "/Wiqi/static/js/main.2a92c596.js",
+    "main.css": "/Wiqi/static/css/main.0127bff0.css",
+    "main.js": "/Wiqi/static/js/main.80148a12.js",
     "index.html": "/Wiqi/index.html",
-    "main.9059ae3e.css.map": "/Wiqi/static/css/main.9059ae3e.css.map",
-    "main.2a92c596.js.map": "/Wiqi/static/js/main.2a92c596.js.map"
+    "main.0127bff0.css.map": "/Wiqi/static/css/main.0127bff0.css.map",
+    "main.80148a12.js.map": "/Wiqi/static/js/main.80148a12.js.map"
   },
   "entrypoints": [
-    "static/css/main.9059ae3e.css",
-    "static/js/main.2a92c596.js"
+    "static/css/main.0127bff0.css",
+    "static/js/main.80148a12.js"
   ]
 }
