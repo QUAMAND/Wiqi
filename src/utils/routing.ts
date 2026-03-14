@@ -1,21 +1,21 @@
-import { PageState } from "../types";
+import { DocNode, PageState, PageType } from "../types";
 import basic from "../data/page/docs/basic.json";
 import advanced from "../data/page/docs/advanced.json";
 
-const allDocs = [...basic, ...advanced];
-
-function flattenDocs(pages: any[]): any[] {
+function flattenDocs(pages: DocNode[]): DocNode[] {
   return pages.flatMap((page) => [
     page,
     ...(page.children ? flattenDocs(page.children) : []),
   ]);
 }
 
+const allDocs: DocNode[] = [...basic, ...advanced];
+const flatDocs = flattenDocs(allDocs)
+const urlMap = new Map<string, DocNode>(flatDocs.map(doc => [doc.url, doc]))
+
+/** 무작위 url을 반환합니다 */
 export function getRandomDocUrl(): string | undefined {
-  const flatDocs = flattenDocs(allDocs);
-  if (flatDocs.length === 0) return undefined;
-  const randomDoc = flatDocs[Math.floor(Math.random() * flatDocs.length)];
-  return randomDoc.url;
+  return flatDocs.length === 0 ? undefined : flatDocs[Math.floor(Math.random() * flatDocs.length)].url
 }
 
 export interface NavDoc {
@@ -24,7 +24,6 @@ export interface NavDoc {
 }
 
 export function getNextPrevDocs(currentUrl: string): { next?: NavDoc; prev?: NavDoc } {
-  const flatDocs = flattenDocs(allDocs);
   const currentIndex = flatDocs.findIndex((doc) => doc.url === currentUrl);
 
   return {
@@ -34,88 +33,67 @@ export function getNextPrevDocs(currentUrl: string): { next?: NavDoc; prev?: Nav
 }
 
 export function getNextPrevDocsByFile(currentFile: string): { next?: NavDoc; prev?: NavDoc } {
-  const flatDocs = flattenDocs(allDocs);
-
-  // 현재 파일과 다른 이전 문서 찾기
-  let prevDoc: NavDoc | undefined;
-  for (let i = flatDocs.length - 1; i >= 0; i--) {
-    if (flatDocs[i].file !== currentFile) {
-      prevDoc = { url: flatDocs[i].url, title: flatDocs[i].title };
-      break;
-    }
-  }
-
-  // 현재 파일과 다른 다음 문서 찾기
-  let nextDoc: NavDoc | undefined;
-  for (let i = 0; i < flatDocs.length; i++) {
-    if (flatDocs[i].file !== currentFile) {
-      nextDoc = { url: flatDocs[i].url, title: flatDocs[i].title };
-      break;
-    }
-  }
+  const prevDoc = [...flatDocs].reverse().find(d => d.file !== currentFile);
+  const nextDoc = flatDocs.find(d => d.file !== currentFile);
 
   return {
-    prev: prevDoc,
-    next: nextDoc,
+    prev: prevDoc ? { url: prevDoc.url, title: prevDoc.title } : undefined,
+    next: nextDoc ? { url: nextDoc.url, title: nextDoc.title } : undefined,
   };
 }
 
 export function getNextPrevDocsSkipSameFile(currentUrl: string): { next?: NavDoc; prev?: NavDoc } {
-  const flatDocs = flattenDocs(allDocs);
   const currentIndex = flatDocs.findIndex((doc) => doc.url === currentUrl);
-
   if (currentIndex === -1) return {};
 
   const currentFile = flatDocs[currentIndex].file;
+  const prev = [...flatDocs.slice(0, currentIndex)].reverse().find(d => d.file !== currentFile);
+  const next = flatDocs.slice(currentIndex + 1).find(d => d.file !== currentFile);
 
-  // 이전 찾기 (같은 파일 제외)
-  let prevDoc: NavDoc | undefined;
-  for (let i = currentIndex - 1; i >= 0; i--) {
-    if (flatDocs[i].file !== currentFile) {
-      prevDoc = { url: flatDocs[i].url, title: flatDocs[i].title };
-      break;
-    }
-  }
-
-  // 다음 찾기 (같은 파일 제외)
-  let nextDoc: NavDoc | undefined;
-  for (let i = currentIndex + 1; i < flatDocs.length; i++) {
-    if (flatDocs[i].file !== currentFile) {
-      nextDoc = { url: flatDocs[i].url, title: flatDocs[i].title };
-      break;
-    }
-  }
-
-  return { prev: prevDoc, next: nextDoc };
+  return {
+    prev: prev ? { url: prev.url, title: prev.title } : undefined,
+    next: next ? { url: next.url, title: next.title } : undefined
+  };
 }
 
+/** url을 이용해 실제 파일로 이동합니다 */
 export function urlToFile(url: string): string | undefined {
-  function walk(pages: any[]): string | undefined {
-    for (const page of pages) {
-      if (page.url === url) return page.file;
-      if (page.children) {
-        const found = walk(page.children);
-        if (found) return found;
-      }
-    }
-  }
-  return walk(allDocs);
+  return urlMap.get(url)?.file;
 }
 
 export function pathToPage(pathname: string, search: string): PageState {
-  if (pathname.startsWith("/doc")) return { type: "markdown", url: pathname.replace("/doc", ""), file: urlToFile(pathname.replace("/doc", "")) };
-  if (pathname === "/calc")        return { type: "calc" };
-  if (pathname === "/editor")      return { type: "editor" };
-  if (pathname === "/search")      return { type: "search", query: new URLSearchParams(search).get("q") ?? "" };
+  const staticRoutes: Record<string, PageType> = {
+    "/calc": "calc",
+    "/editor": "editor",
+    "/search": "search",
+    "/credits": "credits",
+    "/versions": "versions"
+  };
+
+  if (staticRoutes[pathname]) {
+    const type = staticRoutes[pathname];
+    return type === "search" 
+      ? { type, query: new URLSearchParams(search).get("q") ?? "" }
+      : { type };
+  }
+
+  if (pathname.startsWith("/doc")) {
+    const url = pathname.replace("/doc", "");
+    return { type: "markdown", url, file: urlToFile(url) };
+  }
+
   return { type: "home" };
 }
 
 export function pageToPath(state: PageState): string {
-  switch (state.type) {
-    case "markdown": return `/doc${state.url}`;
-    case "search":   return `/search?q=${state.query}`;
-    case "calc":     return "/calc";
-    case "editor":   return "/editor";
-    default:         return "/";
-  }
+  const mapping: Partial<Record<PageType, string>> = {
+    markdown: `/doc${state.url}`,
+    search: `/search?q=${state.query || ""}`,
+    calc: "/calc",
+    editor: "/editor",
+    credits: "/credits",
+    versions: "/versions",
+    home: "/"
+  };
+  return mapping[state.type] ?? "/";
 }

@@ -1,14 +1,14 @@
-import { useSetting } from "../hooks/Settings";
-import basic from "../data/page/docs/basic.json";
-import advanced from "../data/page/docs/advanced.json";
-import homes from "../data/page/homes.json";
+import { useSetting } from "../../hooks/Settings";
+import basic from "../../data/page/docs/basic.json";
+import advanced from "../../data/page/docs/advanced.json";
+import homes from "../../data/page/homes.json";
 
-import { Footer } from "./common/Footer";
-import { Item, OperPages } from "./sidebar/Item";
-import { CountingChildren, Group } from "./sidebar/Group";
-import { Line } from "./common/Line";
-import { Tooltip } from "./common/Tooltip";
-import { PageState } from "../types";
+import { Footer } from "../common/Footer";
+import { Item, OperPages } from "./Item";
+import { CountingChildren, Group } from "./Group";
+import { Line } from "../common/Line";
+import { Tooltip } from "../common/Tooltip";
+import { PageState } from "../../types";
 
 interface Props {
   open: boolean;
@@ -28,8 +28,10 @@ export function Sidebar({ open, page, onSelect }: Props) {
         </div>
 
         <nav className="Sidebar-list">
-          <Group text={t.sidebar.home} icon="home" color="var(--accent-red)" glow="var(--accent-glow-red)" count={CountingChildren(homes)} onClick={() => onSelect({ type: "home" })}>
+          <Group text={t.sidebar.home} icon="home" color="var(--accent-red)" glow="var(--accent-glow-red)" count={CountingChildren(homes)}>
             <Item icon="home" text="홈 페이지" onClick={() => onSelect({ type: "home" })} />
+            <Item icon="history" text="버전 기록" onClick={() => onSelect({ type: "versions" })} />
+            <Item icon="credits" text="크레딧" onClick={() => onSelect({ type: "credits" })} />
           </Group>
 
           <Group text={t.sidebar.docs} icon="docs" color="var(--accent-gold)" glow="var(--accent-glow-gold)" count={CountingChildren([...basic, ...advanced])}>
@@ -40,6 +42,7 @@ export function Sidebar({ open, page, onSelect }: Props) {
 
           <Group text={t.sidebar.calc} icon="calc" color="var(--accent-green)" glow="var(--accent-glow-green)" count={1}/>
           <Group text={t.sidebar.edit} icon="edit" color="var(--accent-blue)" glow="var(--accent-glow-blue)" count={1}/>
+          <Group text={t.sidebar.etc} icon="etc" color="var(--accent-purple)" glow="var(--accent-glow-purple)" count={1}/>
         </nav>
 
         <Line width={292} height={1} />

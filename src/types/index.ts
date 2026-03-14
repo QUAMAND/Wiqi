@@ -1,7 +1,7 @@
 /**
- * 페이지 상태 타입
+ * 페이지 상태 유형
  */
-export type PageType = "home" | "markdown" | "calc" | "editor" | "search";
+export type PageType = "home" | "versions" | "credits" | "markdown" | "calc" | "editor" | "etc" | "search";
 
 export interface PageState {
   type: PageType;
@@ -11,7 +11,7 @@ export interface PageState {
 }
 
 /**
- * 문서 관련 타입
+ * 문서 관련 유형
  */
 export interface DocNode {
   url: string;
@@ -30,7 +30,7 @@ export interface FlatDoc {
 }
 
 /**
- * 뉴스 아이템 타입
+ * 뉴스 아이템 유형
  */
 export interface NewsItem {
   title: string;

@@ -42,16 +42,17 @@ const NavButton = styled.button`
   }
 `;
 
-export function NavControl() {
+export function NavControl({ onToggleToc }: { onToggleToc?: () => void }) {
   const { t } = useSetting();
+  const handleToggle = () => {
+    if (onToggleToc) onToggleToc();
+  };
 
   const scrollTo = (pos: "top" | "bottom") => {
     const app = document.querySelector(".App") as HTMLElement;
     
-    // .App 요소가 존재하고 실제 내부 스크롤이 발생하고 있는지 확인
     const isAppScrollable = app && app.scrollHeight > app.clientHeight;
-    
-    // 스크롤 대상 결정 (App이 스크롤 가능하면 App, 아니면 창 전체)
+
     const target = isAppScrollable ? app : window;
     
     if (pos === "top") {
@@ -64,6 +65,11 @@ export function NavControl() {
 
   return (
     <Container>
+      <Tooltip text={t.topbar.toc} pos="left">
+        <NavButton onClick={handleToggle} title={t.topbar.toc}>
+          <Icon icon="toc" size={30} />
+        </NavButton>
+      </Tooltip>
       <Tooltip text={t.topbar.top} pos="left">
         <NavButton onClick={() => scrollTo("top")} title={t.topbar.top}>
           <Icon icon="jump" size={36} style={{ transform: "rotate(0deg)", marginTop: "-6px" }} />

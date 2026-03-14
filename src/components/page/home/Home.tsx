@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
-import { Icon } from "./common/Icon";
+import { Icon } from "../../common/Icon";
 import "./home.css";
-import { useSetting } from "../hooks/Settings";
-import { useFetch } from "../hooks/useFetch";
-import { fetchData } from "../utils/api";
-import { NewsItem } from "../types";
-import { Tooltip } from "./common/Tooltip";
+import { useSetting } from "../../../hooks/Settings";
+import { useFetch } from "../../../hooks/useFetch";
+import { fetchData } from "../../../utils/api";
+import { NewsItem } from "../../../types";
+import { Tooltip } from "../../common/Tooltip";
 
 interface HomeNewsProps {
   data: { entries: NewsItem[] } | null;
@@ -18,12 +18,26 @@ function HomeNews({ data, loading }: HomeNewsProps) {
 
   useEffect(() => {
     if (!data) return;
-    const sorted = [...data.entries]
-      .sort((a: NewsItem, b: NewsItem) =>
-        new Date(b.date) > new Date(a.date) ? 1 : -1
-      )
-      .slice(0, 3);
-    setNews(sorted);
+
+    const entries = [...data.entries];
+    const sortByDateDesc = (a: NewsItem, b: NewsItem) =>
+      new Date(b.date).getTime() - new Date(a.date).getTime();
+
+    const latestRelease = entries
+      .filter((item) => item.type === "release")
+      .sort(sortByDateDesc)[0];
+    const latestSnapshot = entries
+      .filter((item) => item.type === "snapshot")
+      .sort(sortByDateDesc)[0];
+
+    const latest: NewsItem[] = [];
+    if (latestSnapshot) latest.push(latestSnapshot);
+    if (latestRelease) latest.push(latestRelease);
+
+    // 릴리스/스냅샷을 날짜 기준 최신순으로 정렬
+    latest.sort(sortByDateDesc);
+
+    setNews(latest);
   }, [data]);
 
   return (
@@ -74,67 +88,6 @@ function HomeNews({ data, loading }: HomeNewsProps) {
               </a>
             </Tooltip>
           ))}
-        </div>
-      )}
-    </section>
-  );
-}
-
-function HomeVersions({ data, loading }: HomeNewsProps) {
-  const {t} = useSetting();
-  const [versions, setVersions] = useState<NewsItem[]>([]);
-  const [isExpanded, setIsExpanded] = useState(false);
-
-  useEffect(() => {
-    if (!data) return;
-    const sorted = [...data.entries]
-      .sort((a: NewsItem, b: NewsItem) =>
-        new Date(b.date) > new Date(a.date) ? 1 : -1
-      )
-      .slice(0, isExpanded ? 64 : 6);
-    setVersions(sorted);
-  }, [data, isExpanded]);
-
-  return (
-    <section className="Home-section">
-      <h2>{t.home.versions}</h2>
-      {loading ? (
-        <p className="Home-loading">{t.home.loading}</p>
-      ) : (
-        <div className="Home-versions-container">
-          <div className="Home-versions">
-            <div className="Home-versions-graph" />
-            {versions.map((item) => (
-              <a
-                key={item.version}
-                href={`https://minecraft.wiki/w/Java_Edition_${item.version}`}
-                target="_blank"
-                rel="noreferrer"
-                className="Home-version-item"
-              >
-                <Icon
-                  icon="git"
-                  size={16}
-                  className={`Home-version-icon ${item.type}`}
-                  color={item.type === "release" ? "var(--accent-green)" : "var(--accent-red)"}
-                />
-                <div className="Home-version-content">
-                  <span className="Home-version-tag">{item.version}</span>
-                  <span className="Home-version-title">{item.title}</span>
-                  <span className="Home-version-date">
-                    {new Date(item.date).toLocaleDateString(`${t.date}`)}
-                  </span>
-                </div>
-              </a>
-            ))}
-          </div>
-          <button
-            className="Home-versions-more"
-            onClick={() => setIsExpanded(!isExpanded)}
-          >
-            <Icon icon="dropdown" size={20} style={{ transform: isExpanded ? "rotate(180deg)" : "none", transition: "transform 0.3s" }} />
-            <span>{isExpanded ? "0..." : "64..."}</span>
-          </button>
         </div>
       )}
     </section>
@@ -193,57 +146,82 @@ export function Home() {
             </strong>
             <span>{t.home.wiki}</span>
           </a>
+          <a
+            href="https://mojira.dev"
+            target="_blank"
+            rel="noreferrer"
+            className="Home-link-item"
+          >
+            <strong>
+              {t.home.link_mojira}
+              <Icon icon="link" size={16} color="var(--accent-blue)" />
+            </strong>
+            <span>{t.home.mojira}</span>
+          </a>
+          <a
+            href="https://www.mcc-gadgets.com/java/changelog"
+            target="_blank"
+            rel="noreferrer"
+            className="Home-link-item"
+          >
+            <strong>
+              {t.home.link_mccgadgets}
+              <Icon icon="link" size={16} color="var(--accent-blue)" />
+            </strong>
+            <span>{t.home.mccgadgets}</span>
+          </a>
+          <a
+            href="https://mcstacker.net"
+            target="_blank"
+            rel="noreferrer"
+            className="Home-link-item"
+          >
+            <strong>
+              {t.home.link_mcstacker}
+              <Icon icon="link" size={16} color="var(--accent-blue)" />
+            </strong>
+            <span>{t.home.mcstacker}</span>
+          </a>
+          <a
+            href="https://misode.github.io"
+            target="_blank"
+            rel="noreferrer"
+            className="Home-link-item"
+          >
+            <strong>
+              {t.home.link_misode}
+              <Icon icon="link" size={16} color="var(--accent-blue)" />
+            </strong>
+            <span>{t.home.misode}</span>
+          </a>
+          <a
+            href="https://mcsrc.dev"
+            target="_blank"
+            rel="noreferrer"
+            className="Home-link-item"
+          >
+            <strong>
+              {t.home.link_mcsrc}
+              <Icon icon="link" size={16} color="var(--accent-blue)" />
+            </strong>
+            <span>{t.home.mcsrc}</span>
+          </a>
+          <a
+            href="https://bdengine.app"
+            target="_blank"
+            rel="noreferrer"
+            className="Home-link-item"
+          >
+            <strong>
+              {t.home.link_bdengine}
+              <Icon icon="link" size={16} color="var(--accent-blue)" />
+            </strong>
+            <span>{t.home.bdengine}</span>
+          </a>
         </div>
       </section>
 
       <br />
-
-      <HomeVersions data={data} loading={loading} />
-
-      <section className="Home-section Home-credits">
-        <h2>{t.credits}</h2>
-
-        <div className="Home-credits-group">
-          <h3>{t.home.admin}</h3>
-          <a
-            href="https://github.com/QUAMAND"
-            target="_blank"
-            rel="noreferrer"
-            className="Home-credits-person"
-          >
-            <span className="Home-credits-name">QUAMAND</span>
-          </a>
-        </div>
-
-        <div className="Home-credits-group">
-          <h3>{t.home.editor}</h3>
-          <a
-            href="https://github.com/QUAMAND"
-            target="_blank"
-            rel="noreferrer"
-            className="Home-credits-person"
-          >
-            <span className="Home-credits-name">QUAMAND</span>
-          </a>
-        </div>
-
-        <div className="Home-credits-group">
-          <h3>{t.home.source}</h3>
-          <div className="Home-info-box">
-            <a
-              href="https://github.com/QUAMAND/Wiqi"
-              target="_blank"
-              rel="noreferrer"
-              className="Home-credits-github"
-            >
-              <p>
-                {t.home.info_4}
-              </p>
-            </a>
-          </div>
-        </div>
-      </section>
-
     </div>
   );
 }

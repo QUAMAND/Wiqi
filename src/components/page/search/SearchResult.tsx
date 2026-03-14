@@ -1,12 +1,12 @@
 import { useMemo } from "react";
-import { PageState, DocNode, FlatDoc } from "../types";
-import { useSetting } from "../hooks/Settings";
-import { useFetch } from "../hooks/useFetch";
-import { fetchText } from "../utils/api";
-import { Icon } from "./common/Icon";
+import { PageState, DocNode, FlatDoc } from "../../../types";
+import { useSetting } from "../../../hooks/Settings";
+import { useFetch } from "../../../hooks/useFetch";
+import { fetchText } from "../../../utils/api";
+import { Icon } from "../../common/Icon";
 
-import basic from "../data/page/docs/basic.json";
-import advanced from "../data/page/docs/advanced.json";
+import basic from "../../../data/page/docs/basic.json";
+import advanced from "../../../data/page/docs/advanced.json";
 import "./searchresult.css";
 interface Props {
   query: string;
