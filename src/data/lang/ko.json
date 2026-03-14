@@ -40,6 +40,9 @@
     "link_bdengine": "bdengine.app",
     "bdengine": "표시 모델링",
     "versions": "버전 기록",
+    "release": "릴리스",
+    "snapshot": "스냅샷",
+    "pre": "프리릴리스",
     "admin": "총 관리자",
     "editor": "편집자",
     "source": "소스 코드",
@@ -68,6 +71,7 @@
     "docs": "문서",
     "calc": "계산기",
     "edit": "편집기",
+    "etc": "기타",
     "version": "위키 마인크래프트 버전",
     "wiki_credits": "위키 크레딧"
   },

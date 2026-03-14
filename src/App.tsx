@@ -9,12 +9,12 @@ import rehypeRaw from "rehype-raw";
 
 import { Provider, useSetting } from "./hooks/Settings";
 import { useFetch } from "./hooks/useFetch";
-import { SearchResult } from "./components/SearchResult";
-import { Sidebar } from "./components/Sidebar";
+import { SearchResult } from "./components/page/search/SearchResult";
+import { Sidebar } from "./components/sidebar/Sidebar";
 import { Topbar } from "./components/Topbar";
 import { NavControl } from "./components/common/NavControl";
 import { TocOverlay } from "./components/common/TocOverlay";
-import { Home } from "./components/Home";
+import { Home } from "./components/page/home/Home";
 import { pathToPage, pageToPath, urlToFile, getRandomDocUrl, getNextPrevDocsSkipSameFile } from "./utils/routing";
 import { fetchText } from "./utils/api";
 import { PageState } from "./types";
@@ -22,6 +22,8 @@ import { PageState } from "./types";
 import "./styles.css";
 import "./markdown.css";
 import { Icon } from "./components/common/Icon";
+import { Credits } from "./components/page/home/Credits";
+import { Versions } from "./components/page/home/Versions";
 
 const GlobalLayoutStyle = createGlobalStyle<{ $fixed?: boolean }>`
   ${p => p.$fixed ? `
@@ -86,6 +88,8 @@ function Content() {
         <Sidebar open={sidebar} page={page} onSelect={handleSelect} />
         <div className="App">
           {page.type === "home"     && <Home />}
+          {page.type === "credits"  && <Credits/>}
+          {page.type === "versions"  && <Versions />}
           {page.type === "markdown" && <MarkdownPage file={page.file!} url={page.url!} onSelect={handleSelect} />}
           {page.type === "calc"     && <p>{t.pages.calc}</p>}
           {page.type === "editor"   && <p>{t.pages.editor}</p>}

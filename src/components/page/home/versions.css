@@ -1,0 +1,122 @@
+/* 최신 버전 기록 (Git Graph 스타일) */
+.Versions {
+   position: relative;
+   display: flex;
+   flex-direction: column;
+   gap: 8px;
+   padding-left: 24px;
+   margin-top: 8px;
+}
+
+.Versions-graph {
+   position: absolute;
+   top: 0;
+   bottom: 0;
+   left: 7px;
+   width: 3px;
+   background: var(--l-sub);
+   z-index: 0;
+}
+
+.Version-item {
+   position: relative;
+   display: flex;
+   align-items: center;
+   gap: 16px;
+   text-decoration: none;
+   cursor: pointer;
+   padding: 8px 12px;
+   border-radius: var(--radius-m);
+   transition: background var(--transition);
+   z-index: 1;
+}
+
+.Version-item:hover {
+   background: var(--bg-raised);
+}
+
+.Version-icon {
+   position: absolute;
+   left: -23px;
+   flex-shrink: 0;
+   z-index: 2;
+   transition: transform var(--transition);
+}
+
+.Version-item:hover .Version-icon {
+   transform: scale(1.1);
+}
+
+.Version-content {
+   display: flex;
+   align-items: center;
+   gap: 12px;
+   flex-wrap: wrap;
+}
+
+.Version-tag {
+   font-family: "code";
+   font-size: 0.85rem;
+   font-weight: bold;
+   color: var(--text-content);
+   background: var(--bg-raised);
+   padding: 2px 8px;
+   border-radius: 4px;
+   border: 1px solid var(--l-dim);
+}
+
+.Version-title {
+   font-size: 0.95rem;
+   color: var(--text-second);
+}
+
+.Version-date {
+   font-size: 0.75rem;
+   color: var(--text-muted);
+}
+
+.Version-item:hover .Version-title {
+   color: var(--text-accent);
+}
+
+/* 펼치기 버튼 */
+.Versions-container {
+   display: flex;
+   flex-direction: column;
+   gap: 12px;
+}
+
+.Versions-more {
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   gap: 8px;
+   width: 50%;
+   padding: 10px;
+   background: var(--bg-stone);
+   border: 1px solid var(--l-dim);
+   border-radius: var(--radius-m);
+   color: var(--text-second);
+   font-family: "main-bold";
+   font-size: 0.9rem;
+   cursor: pointer;
+   transition: all var(--transition);
+}
+
+.Versions-more:hover {
+   background: var(--bg-raised);
+   border-color: var(--l-act);
+   color: var(--text-accent);
+}
+
+/* 펼쳐진 Technical Changes */
+.Version-technical {
+   cursor: auto;
+   text-align: left;
+   margin-top: 8px;
+   padding: 10px 14px;
+   background: var(--bg-stone);
+   border-radius: var(--radius-m);
+   font-size: 0.85rem;
+   color: var(--text-content);
+}

@@ -40,6 +40,9 @@
     "link_bdengine": "bdengine.app",
     "bdengine": "display modeling utilities",
     "versions": "Version History",
+    "release": "Release",
+    "snapshot": "Snapshot",
+    "pre": "Pre-release",
     "admin": "Administrator",
     "editor": "Editor",
     "source": "Source Code",
@@ -68,6 +71,7 @@
     "docs": "Documents",
     "calc": "Calculator",
     "edit": "Editor",
+    "etc": "Etc",
     "version": "Wiki Minecraft Version",
     "wiki_credits": "Wiki Credits"
   },

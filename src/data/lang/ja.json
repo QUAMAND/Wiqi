@@ -40,6 +40,9 @@
     "link_bdengine": "bdengine.app",
     "bdengine": "display modeling ユーティリティ",
     "versions": "バージョンの履歴",
+    "release": "リリース",
+    "snapshot": "スナップショット",
+    "pre": "プレリリース",
     "admin": "管理者",
     "editor": "編集者",
     "source": "ソースコード",
@@ -68,6 +71,7 @@
     "docs": "ドキュメント",
     "calc": "計算機",
     "edit": "エディタ",
+    "etc": "その他",
     "version": "Wiki マインクラフトバージョン",
     "wiki_credits": "Wiki クレジット"
   },
