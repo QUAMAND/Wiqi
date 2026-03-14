@@ -58,7 +58,7 @@ export function SearchResult({ query, onSelect }: Props) {
             const excerpt = doc.content ? getExcerpt(doc.content, query) : null;
             return (
               <li key={`${doc.file}-${doc.title}`} className="SearchPage-item"
-                onClick={() => onSelect({ type: "markdown", file: doc.file })}>
+                onClick={() => onSelect({ type: "markdown", url: doc.url, file: doc.file })}>
                 <div className="SearchPage-item-title">
                   <Highlight text={doc.title} query={query} />
                 </div>
