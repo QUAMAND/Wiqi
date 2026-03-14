@@ -113,11 +113,13 @@
 /* 링크 */
 .Home-links {
   display: flex;
+  flex-wrap: wrap;
   gap: 12px;
 }
 .Home-link-item {
-  flex: 1;
-  display: flex;
+  flex: 1 1 25%;
+  min-width: 100px;
+  display: flex;;
   flex-direction: column;
   gap: 6px;
   padding: 18px 20px;

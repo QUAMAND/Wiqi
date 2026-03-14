@@ -18,12 +18,26 @@ function HomeNews({ data, loading }: HomeNewsProps) {
 
   useEffect(() => {
     if (!data) return;
-    const sorted = [...data.entries]
-      .sort((a: NewsItem, b: NewsItem) =>
-        new Date(b.date) > new Date(a.date) ? 1 : -1
-      )
-      .slice(0, 3);
-    setNews(sorted);
+
+    const entries = [...data.entries];
+    const sortByDateDesc = (a: NewsItem, b: NewsItem) =>
+      new Date(b.date).getTime() - new Date(a.date).getTime();
+
+    const latestRelease = entries
+      .filter((item) => item.type === "release")
+      .sort(sortByDateDesc)[0];
+    const latestSnapshot = entries
+      .filter((item) => item.type === "snapshot")
+      .sort(sortByDateDesc)[0];
+
+    const latest: NewsItem[] = [];
+    if (latestSnapshot) latest.push(latestSnapshot);
+    if (latestRelease) latest.push(latestRelease);
+
+    // 릴리스/스냅샷을 날짜 기준 최신순으로 정렬
+    latest.sort(sortByDateDesc);
+
+    setNews(latest);
   }, [data]);
 
   return (
@@ -192,6 +206,78 @@ export function Home() {
               <Icon icon="link" size={16} color="var(--accent-blue)" />
             </strong>
             <span>{t.home.wiki}</span>
+          </a>
+          <a
+            href="https://mojira.dev"
+            target="_blank"
+            rel="noreferrer"
+            className="Home-link-item"
+          >
+            <strong>
+              {t.home.link_mojira}
+              <Icon icon="link" size={16} color="var(--accent-blue)" />
+            </strong>
+            <span>{t.home.mojira}</span>
+          </a>
+          <a
+            href="https://www.mcc-gadgets.com/java/changelog"
+            target="_blank"
+            rel="noreferrer"
+            className="Home-link-item"
+          >
+            <strong>
+              {t.home.link_mccgadgets}
+              <Icon icon="link" size={16} color="var(--accent-blue)" />
+            </strong>
+            <span>{t.home.mccgadgets}</span>
+          </a>
+          <a
+            href="https://mcstacker.net"
+            target="_blank"
+            rel="noreferrer"
+            className="Home-link-item"
+          >
+            <strong>
+              {t.home.link_mcstacker}
+              <Icon icon="link" size={16} color="var(--accent-blue)" />
+            </strong>
+            <span>{t.home.mcstacker}</span>
+          </a>
+          <a
+            href="https://misode.github.io"
+            target="_blank"
+            rel="noreferrer"
+            className="Home-link-item"
+          >
+            <strong>
+              {t.home.link_misode}
+              <Icon icon="link" size={16} color="var(--accent-blue)" />
+            </strong>
+            <span>{t.home.misode}</span>
+          </a>
+          <a
+            href="https://mcsrc.dev"
+            target="_blank"
+            rel="noreferrer"
+            className="Home-link-item"
+          >
+            <strong>
+              {t.home.link_mcsrc}
+              <Icon icon="link" size={16} color="var(--accent-blue)" />
+            </strong>
+            <span>{t.home.mcsrc}</span>
+          </a>
+          <a
+            href="https://bdengine.app"
+            target="_blank"
+            rel="noreferrer"
+            className="Home-link-item"
+          >
+            <strong>
+              {t.home.link_bdengine}
+              <Icon icon="link" size={16} color="var(--accent-blue)" />
+            </strong>
+            <span>{t.home.bdengine}</span>
           </a>
         </div>
       </section>

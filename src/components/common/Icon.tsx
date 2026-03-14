@@ -120,5 +120,16 @@ const ICONS = {
   ),
   moon: (
     <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+  ),
+  toc: (
+    <>
+      <circle cx="2" cy="5" r="2"/>
+      <circle cx="2" cy="12" r="2"/>
+      <circle cx="2" cy="19" r="2"/>
+      
+      <rect x="7" y="3" width="16" height="4" rx="1"/>
+      <rect x="7" y="10" width="16" height="4" rx="1"/>
+      <rect x="7" y="17" width="16" height="4" rx="1"/>
+    </>
   )
 };

@@ -13,6 +13,7 @@ import { SearchResult } from "./components/SearchResult";
 import { Sidebar } from "./components/Sidebar";
 import { Topbar } from "./components/Topbar";
 import { NavControl } from "./components/common/NavControl";
+import { TocOverlay } from "./components/common/TocOverlay";
 import { Home } from "./components/Home";
 import { pathToPage, pageToPath, urlToFile, getRandomDocUrl, getNextPrevDocsSkipSameFile } from "./utils/routing";
 import { fetchText } from "./utils/api";
@@ -44,10 +45,12 @@ function Content() {
   const { t, setting } = useSetting();
 
   const [sidebar, openSidebar] = useState(false);
+  const [tocOpen, setTocOpen] = useState(false);
   const [page, setPage] = useState<PageState>(() => pathToPage(location.pathname, location.search));
 
   useEffect(() => {
     setPage(pathToPage(location.pathname, location.search));
+    setTocOpen(false);
   }, [location]);
 
   const handleSelect = (state: PageState) => {
@@ -89,7 +92,10 @@ function Content() {
           {page.type === "search"   && <SearchResult query={page.query!} onSelect={handleSelect} />}
         </div>
       </div>
-      {setting.nav && <NavControl />}
+      {setting.nav && <NavControl onToggleToc={() => setTocOpen((p) => !p)} />}
+      {page.type === "markdown" && (
+        <TocOverlay open={tocOpen} onClose={() => setTocOpen(false)} />
+      )}
     </>
   );
 }
