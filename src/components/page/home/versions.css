@@ -1,5 +1,6 @@
 /* 최신 버전 기록 (Git Graph 스타일) */
 .Versions {
+   animation: fadeIn 300ms ease-in forwards;
    position: relative;
    display: flex;
    flex-direction: column;

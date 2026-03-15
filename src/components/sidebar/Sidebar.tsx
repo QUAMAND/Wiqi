@@ -54,7 +54,7 @@ export function Sidebar({ open, page, onSelect }: Props) {
           <Footer text={t.credits} color="green" />
         </Tooltip>
 
-        <br />
+        <Line width={0} height={12}/>
 
       </div>
     </div>

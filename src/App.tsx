@@ -1,5 +1,5 @@
-import { useNavigate, useLocation } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { Routes, Route, useNavigate, useLocation, Navigate } from "react-router-dom";
+import { useState, useEffect, ComponentType } from "react";
 import styled, { createGlobalStyle } from "styled-components";
 import ReactMarkdown from "react-markdown";
 import rehypeSlug from "rehype-slug";
@@ -17,7 +17,7 @@ import { TocOverlay } from "./components/common/TocOverlay";
 import { Home } from "./components/page/home/Home";
 import { pathToPage, pageToPath, urlToFile, getRandomDocUrl, getNextPrevDocsSkipSameFile } from "./utils/routing";
 import { fetchText } from "./utils/api";
-import { PageState } from "./types";
+import { PageState, PageType } from "./types";
 
 import "./styles.css";
 import "./markdown.css";
@@ -44,14 +44,14 @@ export type { PageState };
 function Content() {
   const navi = useNavigate();
   const location = useLocation();
-  const { t, setting } = useSetting();
-
+  const { setting } = useSetting();
   const [sidebar, openSidebar] = useState(false);
   const [tocOpen, setTocOpen] = useState(false);
-  const [page, setPage] = useState<PageState>(() => pathToPage(location.pathname, location.search));
+
+  /** location을 기준으로 상태 계산 */
+  const page = pathToPage(location.pathname, location.search);
 
   useEffect(() => {
-    setPage(pathToPage(location.pathname, location.search));
     setTocOpen(false);
   }, [location]);
 
@@ -62,8 +62,6 @@ function Content() {
 
     const newPath = pageToPath(filled);
     if (newPath === location.pathname + location.search) return;
-
-    setPage(filled);
     navi(newPath);
   };
 
@@ -79,21 +77,29 @@ function Content() {
       <GlobalLayoutStyle $fixed={setting.fixed} />
       <Topbar
         sidebarOpen={sidebar}
-        sidebar={() => openSidebar((p) => !p)}
-        onSearch={(query) => handleSelect({ type: "search", query })}
+        sidebar={() => openSidebar(p => !p)}
+        onSearch={q => handleSelect({ type: "search", query: q })}
         goHome={() => handleSelect({ type: "home" })}
-        onRandom={handleRandom}
+        onRandom={() => handleRandom()}
       />
       <div className="Main">
         <Sidebar open={sidebar} page={page} onSelect={handleSelect} />
         <div className="App">
-          {page.type === "home"     && <Home />}
-          {page.type === "credits"  && <Credits/>}
-          {page.type === "versions"  && <Versions />}
-          {page.type === "markdown" && <MarkdownPage file={page.file!} url={page.url!} onSelect={handleSelect} />}
-          {page.type === "calc"     && <p>{t.pages.calc}</p>}
-          {page.type === "editor"   && <p>{t.pages.editor}</p>}
-          {page.type === "search"   && <SearchResult query={page.query!} onSelect={handleSelect} />}
+          <Routes>
+            <Route path="/" element={<Home/>}/>
+            <Route path="/credits" element={<Credits />} />
+            <Route path="/versions" element={<Versions />} />
+            <Route path="/search" element={<SearchResult query={new URLSearchParams(location.search).get("q") || ""} onSelect={handleSelect} />} />
+            
+            {/* Markdown 페이지 (URL 구조에 따라 path 수정 필요) */}
+            <Route 
+              path="/doc/*" 
+              element={<MarkdownPage file={page.file!} url={page.url!} onSelect={handleSelect} />} 
+            />
+
+            {/* 기본 경로 외에는 홈으로 리다이렉트하거나 404 처리 */}
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
         </div>
       </div>
       {setting.nav && <NavControl onToggleToc={() => setTocOpen((p) => !p)} />}
