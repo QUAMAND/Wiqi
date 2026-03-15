@@ -34,7 +34,6 @@ function HomeNews({ data, loading }: HomeNewsProps) {
     if (latestSnapshot) latest.push(latestSnapshot);
     if (latestRelease) latest.push(latestRelease);
 
-    // 릴리스/스냅샷을 날짜 기준 최신순으로 정렬
     latest.sort(sortByDateDesc);
 
     setNews(latest);
@@ -147,7 +146,7 @@ export function Home() {
             <span>{t.home.wiki}</span>
           </a>
           <a
-            href="https://mojira.dev"
+            href="https://mojira.dev/?project=MC"
             target="_blank"
             rel="noreferrer"
             className="Home-link-item"

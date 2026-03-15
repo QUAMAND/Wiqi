@@ -52,6 +52,10 @@ const MenuItem = styled.button<{ $active?: boolean }>`
   &:hover {
     background: var(--bg-hover);
   }
+  &:hover .Dot {
+    background: var(--accent-glow-green);
+    box-shadow: 0 0 5px var(--accent-green-dim);
+  }
 `;
 const Divider = styled.div`
   height: 1px;

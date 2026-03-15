@@ -1,77 +1,75 @@
-import { Routes, Route, useNavigate, useLocation, Navigate } from "react-router-dom";
-import { useState, useEffect, ComponentType } from "react";
-import styled, { createGlobalStyle } from "styled-components";
-import ReactMarkdown from "react-markdown";
-import rehypeSlug from "rehype-slug";
-import rehypeAutolink from "rehype-autolink-headings";
-// @ts-ignore
-import rehypeRaw from "rehype-raw";
-
+import { Routes, Route, Navigate } from "react-router-dom";
+import { useState, useEffect } from "react";
 import { Provider, useSetting } from "./hooks/Settings";
-import { useFetch } from "./hooks/useFetch";
 import { SearchResult } from "./components/page/search/SearchResult";
 import { Sidebar } from "./components/sidebar/Sidebar";
 import { Topbar } from "./components/Topbar";
 import { NavControl } from "./components/common/NavControl";
 import { TocOverlay } from "./components/common/TocOverlay";
 import { Home } from "./components/page/home/Home";
-import { pathToPage, pageToPath, urlToFile, getRandomDocUrl, getNextPrevDocsSkipSameFile } from "./utils/routing";
-import { fetchText } from "./utils/api";
-import { PageState, PageType } from "./types";
+import { PageState } from "./types";
 
 import "./styles.css";
 import "./markdown.css";
-import { Icon } from "./components/common/Icon";
 import { Credits } from "./components/page/home/Credits";
 import { Versions } from "./components/page/home/Versions";
+import { useAppRouter } from "./hooks/useAppRouter";
+import { MarkdownPage } from "./components/page/markdown/Markdown";
 
 export type { PageState };
 
+/** 메인 페이지 */
+export default function App() {
+  return (
+    <Provider>
+      <Content />
+    </Provider>
+  );
+}
+
 function Content() {
-  const navi = useNavigate();
-  const location = useLocation();
+  const {page, pushPage, goRandom} = useAppRouter();
   const { setting } = useSetting();
+
   const [sidebar, openSidebar] = useState(false);
   const [tocOpen, setTocOpen] = useState(false);
-
-  /** location을 기준으로 상태 계산 */
-  const page = pathToPage(location.pathname, location.search);
 
   useEffect(() => {
     setTocOpen(false);
   }, [location]);
-
-  /** 페이지 선택 */
-  const handleSelect = (state: PageState) => {
-    const filled: PageState = state.type === "markdown" && !state.file
-      ? { ...state, file: urlToFile(state.url!) }
-      : state;
-
-    const newPath = pageToPath(filled);
-    if (newPath === location.pathname + location.search) return;
-    navi(newPath);
-  };
 
   return (
     <>
       <Topbar
         sidebarOpen={sidebar}
         sidebar={() => openSidebar(p => !p)}
-        onSearch={q => handleSelect({ type: "search", query: q })}
-        goHome={() => handleSelect({ type: "home" })}
-        onRandom={() => handleSelect({type:"markdown", url: getRandomDocUrl()})}
+        onSearch={q => pushPage({ type: "search", query: q })}
+        goHome={() => pushPage({ type: "home" })}
+        onRandom={goRandom}
       />
       <div className="Main">
-        <Sidebar open={sidebar} page={page} onSelect={handleSelect} />
+        <Sidebar open={sidebar} page={page} onSelect={pushPage} />
         <div className="App">
           <Routes>
             <Route path="/" element={<Home/>}/>
             <Route path="/credits" element={<Credits />} />
             <Route path="/versions" element={<Versions />} />
-            <Route path="/search" element={<SearchResult query={new URLSearchParams(location.search).get("q") || ""} onSelect={handleSelect} />} />
+
+            {/* 검색 페이지 */}
+            <Route path="/search" element={
+              <SearchResult 
+                query={page.type === "search" ? page.query || "" : ""} 
+                onSelect={pushPage} 
+              />
+            } />
             
             {/* Markdown 페이지 (URL 구조에 따라 path 수정 필요) */}
-            <Route path="/doc/*" element={<MarkdownPage file={page.file!} url={page.url!} onSelect={handleSelect} />}/>
+            <Route path="/doc/*" element={
+              <MarkdownPage 
+                file={page.file!} 
+                url={page.url!}
+              />
+            }/>
 
             {/** 나머지 값은 home으로 재설정 */}
             <Route path="*" element={<Navigate to="/" replace />} />
@@ -82,72 +80,6 @@ function Content() {
       {page.type === "markdown" && (
         <TocOverlay open={tocOpen} onClose={() => setTocOpen(false)} />
       )}
-    </>
-  );
-}
-
-export default function App() {
-  return (
-    <Provider>
-      <Content />
-    </Provider>
-  );
-}
-
-export function MarkdownPage({ file, url, onSelect }: { file: string; url: string; onSelect: (state: PageState) => void }) {
-  const location = useLocation();
-  const { t } = useSetting();
-  const { data: content = "", error } = useFetch(
-    () => fetchText(`${process.env.PUBLIC_URL}/documents/${file}`),
-    [file]
-  );
-
-  const finalContent = error ? `# ${t.not_found_doc}` : content;
-  const { next, prev } = getNextPrevDocsSkipSameFile(url);
-
-  useEffect(() => {
-    if (!finalContent) return;
-    const hash = decodeURIComponent(window.location.hash.slice(1));
-    if (!hash) return;
-    requestAnimationFrame(() => {
-      document.getElementById(hash)?.scrollIntoView({ behavior: "smooth"})
-    })
-  }, [finalContent]);
-
-  /** prev, next 버튼은 무조건 페이지의 맨 위로 이동합니다 */
-  useEffect(() => {
-    if (location.hash) return;
-    document.querySelector(".App")?.scrollTo({top: 0});
-  }, [location.pathname]);
-
-  return (
-    <>
-      <div className="markdown">
-        <ReactMarkdown
-          rehypePlugins={[rehypeSlug, [rehypeAutolink, { behavior: "wrap" }], rehypeRaw]}
-        >
-          {finalContent}
-        </ReactMarkdown>
-      </div>
-
-      <div className="markdown-nav">
-        {prev && (
-          <button
-            onClick={() => onSelect({ type: "markdown", url: prev.url })}
-            className="markdown-nav-btn markdown-nav-prev"
-          >
-            <Icon icon="arrow" style={{transform:"rotate(180deg)"}}/> {prev.title}
-          </button>
-        )}
-        {next && (
-          <button
-            onClick={() => onSelect({ type: "markdown", url: next.url })}
-            className="markdown-nav-btn markdown-nav-next"
-          >
-            {next.title} <Icon icon="arrow"/>
-          </button>
-        )}
-      </div>
     </>
   );
 }

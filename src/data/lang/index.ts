@@ -19,6 +19,6 @@ export const getI18n = (lang: LangKeys) => {
  * e.g. "lang": "한국어", "lang": "English"
  */
 export const LangItems = Object.entries(files).map(([key, value]) => ({
-  key,
+  key: key as LangKeys,
   value: value.lang,
 }));

@@ -6,17 +6,18 @@ import {
   useEffect,
   useState,
 } from "react";
-import { getI18n, LangKeys } from "../data/lang";
+import { getI18n, LangItems, LangKeys } from "../data/lang";
 
 type themes = "dark" | "light";
 type langs = LangKeys;
 type fonts = "main" | "code";
+type navs = boolean;
 
 interface Props {
   theme: themes;
   lang: langs;
   font: fonts;
-  nav: boolean;
+  nav: navs;
 }
 
 /* 실제로 사용하는 설정 */
@@ -41,15 +42,10 @@ export const SettingContext = createContext<{
  * 제공자
  */
 export const Provider = ({ children }: { children: ReactNode }) => {
-    const getLang = (): langs => {
-    const saved = localStorage.getItem("lang");
-    if (saved === "ko" || saved === "en" || saved === "ja") return saved;
-    return "ko";
-  };
 
   const [setting, setSetting] = useState<Props>(() => ({
     theme: (localStorage.getItem("theme") as themes) || "dark",
-    lang: getLang(),
+    lang: (localStorage.getItem("lang") as LangKeys) || "ko",
     font: (localStorage.getItem("font") as fonts) || "main",
     nav: localStorage.getItem("nav") !== "false",
   }));
