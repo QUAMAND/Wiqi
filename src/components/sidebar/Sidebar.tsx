@@ -43,18 +43,18 @@ export function Sidebar({ open, page, onSelect }: Props) {
           <Group text={t.sidebar.calc} icon="calc" color="var(--accent-green)" glow="var(--accent-glow-green)" count={1}/>
           <Group text={t.sidebar.edit} icon="edit" color="var(--accent-blue)" glow="var(--accent-glow-blue)" count={1}/>
           <Group text={t.sidebar.etc} icon="etc" color="var(--accent-purple)" glow="var(--accent-glow-purple)" count={1}/>
+
+          <Line width={0} height={6}/>
+
+          <Tooltip text={t.sidebar.version} pos="top" len={2}>
+            <Footer text="Minecraft 1.21.11" color="green" />
+          </Tooltip>
+
+          <Line width={0} height={12}/>
         </nav>
 
-        <Line width={292} height={1} />
 
-        <Tooltip text={t.sidebar.version} pos="right" len={2}>
-          <Footer text="Minecraft 1.21.11" color="green" />
-        </Tooltip>
-        <Tooltip text={t.sidebar.wiki_credits} pos="right" len={2}>
-          <Footer text={t.credits} color="green" />
-        </Tooltip>
-
-        <br />
+        <Line width={0} height={12}/>
 
       </div>
     </div>

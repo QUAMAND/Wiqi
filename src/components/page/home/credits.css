@@ -1,6 +1,6 @@
 /* 카드 */
 .Credits-section {
-  animation: fadeIn 400ms ease-in forwards;
+  animation: fadeIn 300ms ease-in forwards;
   display: flex;
   flex-direction: column;
   gap: 16px;

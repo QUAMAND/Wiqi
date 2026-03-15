@@ -98,7 +98,7 @@ function render(entry: Page, page: PageState, onSelect: (state: PageState) => vo
         depth={depth}
         select={page.file === entry.file}
         onClick={entry.file ? () => onSelect({ type: "markdown", url: entry.url, file: entry.file }) : undefined}
-        textColor={depth === 0 ? "var(--text-accent)" : "var(--text-content)"}
+        textColor={depth === 0 ? "var(--text-accent)" : "var(--text-second)"}
       />
       {entry.children?.map((child) => render(child, page, onSelect, depth + 1))}
     </div>

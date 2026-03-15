@@ -50,13 +50,13 @@
 }
 .Sidebar.true {
   width: 20%;
-  min-width: 275px;
+  min-width: 300px;
   overflow-y: auto;
 }
 /* 사이드 바 목록 안 쪽 */
 .Sidebar-inner {
   width: 100%;
-flex: 1;
+  flex: 1;
   display: flex;
   flex-direction: column;
   overflow-x: hidden;
