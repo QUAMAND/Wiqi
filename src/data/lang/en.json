@@ -39,6 +39,8 @@
     "mcsrc": "Minecraft source search",
     "link_bdengine": "bdengine.app",
     "bdengine": "display modeling utilities",
+    "link_brigadier": "brigadier",
+    "brigadier": "brigadier",
     "versions": "Version History",
     "release": "Release",
     "snapshot": "Snapshot",

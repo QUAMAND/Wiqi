@@ -167,6 +167,13 @@
   border-radius: 1px;
 }
 
+/* 비디오 */
+.markdown video {
+  display: block;
+  max-width: 100%;
+  border-radius: 8px;
+}
+
 /* 테이블  */
 .markdown table {
   width: 100%;
@@ -281,8 +288,8 @@
 
 .markdown-nav-btn {
   flex: 1;
-  padding: 40px;
-  font-size: 1rem;
+  padding: 24px 12px;
+  font-size: 16px;
   font-family: "main";
   color: var(--text-second);
   background-color: var(--bg-backdrop);
@@ -291,29 +298,16 @@
   cursor: pointer;
   transition: all var(--transition);
   text-align: center;
-  font-weight: 500;
   text-decoration: none;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
-  white-space: nowrap;
+  white-space: break-word;
   overflow: hidden;
-  text-overflow: ellipsis;
-  min-width: 0;
 }
 
 .markdown-nav-btn:hover {
   background-color: var(--bg-raised);
   border-color: var(--accent-blue);
   color: var(--accent-blue);
-  box-shadow: 0 0 10px var(--accent-glow-blue);
-}
-
-.markdown-nav-prev {
-  justify-content: flex-start;
-}
-
-.markdown-nav-next {
-  justify-content: flex-end;
 }

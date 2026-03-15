@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import "./markdown.css"
 import ReactMarkdown from "react-markdown";
 import rehypeAutolink from "rehype-autolink-headings";
 import rehypeRaw from "rehype-raw";

@@ -10,7 +10,6 @@ import { Home } from "./components/page/home/Home";
 import { PageState } from "./types";
 
 import "./styles.css";
-import "./markdown.css";
 import { Credits } from "./components/page/home/Credits";
 import { Versions } from "./components/page/home/Versions";
 import { useAppRouter } from "./hooks/useAppRouter";
