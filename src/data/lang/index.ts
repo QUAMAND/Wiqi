@@ -11,7 +11,7 @@ export type LangKeys = keyof typeof files;
  * lang key는 string입니다
  */
 export const getI18n = (lang: LangKeys) => {
-  return files[lang] ?? ko;
+  return (files[lang] ?? ko) as typeof ko;
 };
 
 /*

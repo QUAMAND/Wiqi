@@ -39,6 +39,8 @@
     "mcsrc": "Minecraft 소스 검색",
     "link_bdengine": "bdengine.app",
     "bdengine": "표시 모델링",
+    "link_brigadier": "brigadier",
+    "brigadier": "brigadier",
     "versions": "버전 기록",
     "release": "릴리스",
     "snapshot": "스냅샷",

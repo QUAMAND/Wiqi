@@ -39,6 +39,8 @@
     "mcsrc": "Minecraft ソース検索",
     "link_bdengine": "bdengine.app",
     "bdengine": "display modeling ユーティリティ",
+    "link_brigadier": "brigadier",
+    "brigadier": "brigadier",
     "versions": "バージョンの履歴",
     "release": "リリース",
     "snapshot": "スナップショット",

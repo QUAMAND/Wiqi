@@ -95,6 +95,7 @@ export function Versions() {
 
   const getVersionColor = (entry: VersionItem) => {
     if (entry.version.toLowerCase().includes("pre")) return "var(--accent-gold)";
+    if (entry.version.toLocaleLowerCase().includes("rc")) return "var(--accent-purple)";
     if (entry.type === "release") return "var(--accent-green)";
     return "var(--accent-red)";
   };

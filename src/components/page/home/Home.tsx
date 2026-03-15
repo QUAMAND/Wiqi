@@ -217,10 +217,20 @@ export function Home() {
             </strong>
             <span>{t.home.bdengine}</span>
           </a>
+          <a
+            href="https://github.com/Mojang/brigadier"
+            target="_blank"
+            rel="noreferrer"
+            className="Home-link-item"
+          >
+            <strong>
+              {t.home.link_brigadier}
+              <Icon icon="link" size={16} color="var(--accent-blue)" />
+            </strong>
+            <span>{t.home.brigadier}</span>
+          </a>
         </div>
       </section>
-
-      <br />
     </div>
   );
 }
