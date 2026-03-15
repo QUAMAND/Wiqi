@@ -142,7 +142,7 @@ export function Versions() {
 
             {showCount < entries.length && (
                <button className="Versions-more" onClick={() => setShowCount(showCount + 200)}>
-                  {t.home.loading}...
+                  {t.home.more_loading}
                </button>
             )}
          </div>

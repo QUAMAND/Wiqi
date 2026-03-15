@@ -18,7 +18,7 @@ const ProfileMenuContainer = styled.div`
 `;
 const ProfileMenuList = styled.div`
   position: absolute;
-  top: calc(100% + 8px);
+  top: calc(100% + 7px);
   right: 0;
   width: 200px;
   background: var(--bg-stone);
@@ -111,10 +111,7 @@ export function Topbar({ sidebar, sidebarOpen, onSearch, goHome, onRandom }: Pro
           
           {profileOpen && (
             <>
-              <div 
-                style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, zIndex: 999 }} 
-                onClick={() => setProfileOpen(false)} 
-              />
+              <div onClick={() => setProfileOpen(false)} />
               <ProfileMenuList>
                 <MenuSection>{t.topbar.theme}</MenuSection>
                 <MenuItem 
@@ -147,17 +144,13 @@ export function Topbar({ sidebar, sidebarOpen, onSearch, goHome, onRandom }: Pro
                 ))}
 
                 <Divider />
+                
+                <MenuSection>{t.topbar.layout}</MenuSection>
                 <MenuItem 
                   onClick={() => { Update("nav", !setting.nav); }}
                 >
                   <Dot dot={setting.nav ? "green" : "gray"} />
                   {t.topbar.nav}
-                </MenuItem>
-                <MenuItem 
-                  onClick={() => { Update("fixed", !setting.fixed); }}
-                >
-                  <Dot dot={setting.fixed ? "green" : "gray"} />
-                  {t.topbar.fixed}
                 </MenuItem>
               </ProfileMenuList>
             </>

@@ -17,7 +17,6 @@ interface Props {
   lang: langs;
   font: fonts;
   nav: boolean;
-  fixed: boolean;
 }
 
 /* 실제로 사용하는 설정 */
@@ -53,7 +52,6 @@ export const Provider = ({ children }: { children: ReactNode }) => {
     lang: getLang(),
     font: (localStorage.getItem("font") as fonts) || "main",
     nav: localStorage.getItem("nav") !== "false",
-    fixed: localStorage.getItem("fixed") !== "false",
   }));
 
   const t = getI18n(setting.lang);

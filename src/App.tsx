@@ -25,20 +25,6 @@ import { Icon } from "./components/common/Icon";
 import { Credits } from "./components/page/home/Credits";
 import { Versions } from "./components/page/home/Versions";
 
-const GlobalLayoutStyle = createGlobalStyle<{ $fixed?: boolean }>`
-  ${p => p.$fixed ? `
-    .Sidebar {
-      height: 100% !important;
-      overflow-y: auto !important;
-    }
-  ` : `
-    .Sidebar {
-      position: sticky !important;
-      top: 0;
-    }
-  `}
-`;
-
 export type { PageState };
 
 function Content() {
@@ -68,7 +54,6 @@ function Content() {
 
   return (
     <>
-      <GlobalLayoutStyle $fixed={setting.fixed} />
       <Topbar
         sidebarOpen={sidebar}
         sidebar={() => openSidebar(p => !p)}
