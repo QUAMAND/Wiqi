@@ -55,6 +55,7 @@ function Content() {
     setTocOpen(false);
   }, [location]);
 
+  /** 페이지 선택 */
   const handleSelect = (state: PageState) => {
     const filled: PageState = state.type === "markdown" && !state.file
       ? { ...state, file: urlToFile(state.url!) }
@@ -65,13 +66,6 @@ function Content() {
     navi(newPath);
   };
 
-  const handleRandom = () => {
-    const randomUrl = getRandomDocUrl();
-    if (randomUrl) {
-      handleSelect({ type: "markdown", url: randomUrl });
-    }
-  };
-
   return (
     <>
       <GlobalLayoutStyle $fixed={setting.fixed} />
@@ -80,7 +74,7 @@ function Content() {
         sidebar={() => openSidebar(p => !p)}
         onSearch={q => handleSelect({ type: "search", query: q })}
         goHome={() => handleSelect({ type: "home" })}
-        onRandom={() => handleRandom()}
+        onRandom={() => handleSelect({type:"markdown", url: getRandomDocUrl()})}
       />
       <div className="Main">
         <Sidebar open={sidebar} page={page} onSelect={handleSelect} />
@@ -92,12 +86,9 @@ function Content() {
             <Route path="/search" element={<SearchResult query={new URLSearchParams(location.search).get("q") || ""} onSelect={handleSelect} />} />
             
             {/* Markdown 페이지 (URL 구조에 따라 path 수정 필요) */}
-            <Route 
-              path="/doc/*" 
-              element={<MarkdownPage file={page.file!} url={page.url!} onSelect={handleSelect} />} 
-            />
+            <Route path="/doc/*" element={<MarkdownPage file={page.file!} url={page.url!} onSelect={handleSelect} />}/>
 
-            {/* 기본 경로 외에는 홈으로 리다이렉트하거나 404 처리 */}
+            {/** 나머지 값은 home으로 재설정 */}
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </div>
@@ -119,6 +110,7 @@ export default function App() {
 }
 
 export function MarkdownPage({ file, url, onSelect }: { file: string; url: string; onSelect: (state: PageState) => void }) {
+  const location = useLocation();
   const { t } = useSetting();
   const { data: content = "", error } = useFetch(
     () => fetchText(`${process.env.PUBLIC_URL}/documents/${file}`),
@@ -132,8 +124,16 @@ export function MarkdownPage({ file, url, onSelect }: { file: string; url: strin
     if (!finalContent) return;
     const hash = decodeURIComponent(window.location.hash.slice(1));
     if (!hash) return;
-    setTimeout(() => document.getElementById(hash)?.scrollIntoView({ behavior: "smooth" }), 50);
+    requestAnimationFrame(() => {
+      document.getElementById(hash)?.scrollIntoView({ behavior: "smooth"})
+    })
   }, [finalContent]);
+
+  /** prev, next 버튼은 무조건 페이지의 맨 위로 이동합니다 */
+  useEffect(() => {
+    if (location.hash) return;
+    document.querySelector(".App")?.scrollTo({top: 0});
+  }, [location.pathname]);
 
   return (
     <>

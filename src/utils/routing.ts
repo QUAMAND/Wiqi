@@ -70,15 +70,8 @@ export function pathToPage(pathname: string, search: string): PageState {
     "/versions": "versions"
   };
 
-  if (staticRoutes[pathname]) {
-    const type = staticRoutes[pathname];
-    return type === "search" 
-      ? { type, query: new URLSearchParams(search).get("q") ?? "" }
-      : { type };
-  }
-
   if (pathname.startsWith("/doc")) {
-    const url = pathname.replace("/doc", "");
+    const url = pathname.replace("/doc", "") || "/"; 
     return { type: "markdown", url, file: urlToFile(url) };
   }
 
