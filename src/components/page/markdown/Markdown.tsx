@@ -12,20 +12,23 @@ import { fetchText } from "../../../utils/api";
 const BASE_URL = () => window.location.hash.split("#").slice(0, 2).join("#");
 
 /** /#/doc/some-page#heading-id 형태로 생성 */
-const makeHeading = (Tag: "h1" | "h2" | "h3" | "h4" | "h5" | "h6") =>
-  ({ id, children }: { id?: string; children?: React.ReactNode }) => (
-    <Tag id={id}>
-      <a
-        href={`${BASE_URL()}#${id}`}
-        onClick={(e) => {
-          e.preventDefault();
-          document.getElementById(id!)?.scrollIntoView({ behavior: "smooth" });
-        }}
-      >
-        {children}
-      </a>
-    </Tag>
-  );
+const makeHeading = (Tag: "h1"|"h2"|"h3"|"h4"|"h5"|"h6") =>
+  ({ id, children }: any) => {
+    const basePath = window.location.hash.split("#").slice(0, 2).join("#");
+    console.log("basePath:", basePath);
+    return (
+      <Tag id={id}>
+        <a href={`${basePath}#${id}`}
+          onClick={e => {
+            e.preventDefault();
+            document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+          }}
+        >
+          {children}
+        </a>
+      </Tag>
+    );
+  };
 
 const HEADING_COMPONENTS = {
   h1: makeHeading("h1"),
