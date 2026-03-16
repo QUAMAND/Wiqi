@@ -62,7 +62,9 @@ export function Item({ text, icon, badge, select = false, depth = 0, fontSize, t
     <div style={{ marginLeft: "12px" }}>
       <Style $select={select} $depth={depth} className={className} onClick={onClick}>
         {icon && <Icon size={iconSize} icon={icon} />}
+
         <Text $fontSize={fontSize} $color={textColor}>{text}</Text>
+
         {badge !== undefined && <StyledBadge badge={badge} />}
       </Style>
       {children && <div>{children}</div>}

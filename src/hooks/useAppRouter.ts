@@ -17,17 +17,19 @@ export function useAppRouter() {
     const filled: PageState = (state.type === "markdown" && !state.file)
     ? { ...state, file: urlToFile(state.url!) } : state;
 
-  const newPath = pageToPath(filled);
+    const newPath = pageToPath(filled);
 
-  if (newPath === location.pathname + location.search) return;
+    if (newPath === location.pathname + location.search) return;
 
-  navigate(newPath);
+    navigate(newPath);
   }, [navigate, location.pathname, location.search]);
 
   /** 랜덤 문서 이동 */
   const goRandom = useCallback(() => {
     const url = getRandomDocUrl();
-    if (url) pushPage({ type: "markdown", url });
+    if (url) {
+      pushPage({ type: "markdown", url });
+    }
   }, [pushPage]);
 
   return {
@@ -41,8 +43,7 @@ export function useAppRouter() {
 /** url -> 문서 경로 */
 const urlToFile = (url: string) => URL_MAP.get(url)?.file;
 /** 랜덤 문서 */
-const getRandomDocUrl = () => 
-  FLAT_DOCS.length ? FLAT_DOCS[Math.floor(Math.random() * FLAT_DOCS.length)].url : undefined;
+const getRandomDocUrl = () => FLAT_DOCS.length ? FLAT_DOCS[Math.floor(Math.random() * FLAT_DOCS.length)].url : undefined;
 
 function pathToPage(pathname: string, search?: string): PageState {
   /** 주소 -> 문서 */
@@ -53,7 +54,7 @@ function pathToPage(pathname: string, search?: string): PageState {
 
   /** 주소 -> 검색 */
   if (pathname.startsWith("/search")) {
-    const params = new URLSearchParams(search || window.location.search);
+    const params = new URLSearchParams(search);
     return { type: "search", query: params.get("q") || "" };
   }
 
@@ -65,7 +66,7 @@ function pathToPage(pathname: string, search?: string): PageState {
 function pageToPath(state: PageState): string {
   if (state.type === "markdown") return `/doc${state.url || "/"}`;
   if (state.type === "search") return `/search?q=${encodeURIComponent(state.query || "")}`;
-
+  /** 그 외 */
   return PAGE_TO_PATH[state.type] ?? "/";
 }
 /** 이전/다음 문서 검색, 이미 선택한 건 취소 */

@@ -1,10 +1,10 @@
 /**
  * 페이지 상태 유형
  */
-export type PageType = "home" | "versions" | "credits" | "markdown" | "calc" | "editor" | "etc" | "search";
+export type PagePaths = "home" | "versions" | "credits" | "markdown" | "calc" | "editor" | "etc" | "search";
 
 export interface PageState {
-  type: PageType;
+  type: PagePaths;
   url?: string;
   file?: string;
   query?: string;
@@ -13,12 +13,12 @@ export interface PageState {
 /**
  * 문서 관련 유형
  */
-export interface DocNode {
+export interface DocumentFile {
   url: string;
   title: string;
   subtitle?: string;
   file: string;
-  children?: DocNode[];
+  children?: DocumentFile[];
 }
 
 export interface FlatDoc {

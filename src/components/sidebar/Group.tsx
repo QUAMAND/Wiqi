@@ -70,12 +70,19 @@ export function Group({ text, icon, count, color, glow, fontSize = "1rem", child
 
   return (
     <>
-      <Style $open={open} $color={color} $glow={glow} className={className}
+      <Style
+        $open={open}
+        $color={color}
+        $glow={glow}
+        className={className}
         onClick={() => { setOpen((v) => !v); onClick?.(); }}>
-        {icon && <Icon size={24} color={color} icon={icon} />}
-        <Text $fontSize={fontSize}>{text}</Text>
-        {count && <StyledBadge badge={count} />}
-        <DropIcon icon="dropdown" size={20} $open={open} />
+          {icon && <Icon size={24} color={color} icon={icon} />}
+
+          <Text $fontSize={fontSize}>{text}</Text>
+
+          {count && <StyledBadge badge={count} />}
+
+          <DropIcon icon="dropdown" size={20} $open={open} />
       </Style>
       <Items $open={open}>
         {children}

@@ -1,13 +1,12 @@
 import { useMemo } from "react";
-import { PageState, DocNode, FlatDoc } from "../../../types";
+import { PageState, DocumentFile, FlatDoc } from "../../../types";
 import { useSetting } from "../../../hooks/Settings";
 import { useFetch } from "../../../hooks/useFetch";
 import { fetchText } from "../../../utils/api";
 import { Icon } from "../../common/Icon";
 
-import basic from "../../../data/page/docs/basic.json";
-import advanced from "../../../data/page/docs/advanced.json";
 import "./searchresult.css";
+import { FLAT_DOCS } from "../../../hooks/RoutingConst";
 interface Props {
   query: string;
   onSelect: (state: PageState) => void;
@@ -16,17 +15,20 @@ interface Props {
 export function SearchResult({ query, onSelect }: Props) {
   const { t } = useSetting();
 
-  const allDocs = useMemo(() => flatten([...basic, ...advanced] as DocNode[]), []);
+  const allDocs = useMemo(() => FLAT_DOCS, []);
   const { fetchedDocs, loading } = useFetchedDocs(allDocs);
 
   const results = useMemo(() => {
     const q = query.trim().toLowerCase();
-    if (!q) return fetchedDocs;
-    return fetchedDocs.filter((d) =>
-      d.title.toLowerCase().includes(q) ||
-      d.subtitle.toLowerCase().includes(q) ||
-      d.content?.toLowerCase().includes(q)
-    );
+    if (q) {
+      return fetchedDocs.filter((d) =>
+        d.title.toLowerCase().includes(q) ||
+        d.subtitle.toLowerCase().includes(q) ||
+        d.content?.toLowerCase().includes(q)
+      );
+    } else {
+      return fetchedDocs;
+    }
   }, [query, fetchedDocs]);
 
   return (
@@ -82,7 +84,7 @@ export function SearchResult({ query, onSelect }: Props) {
   );
 }
 
-function flatten(nodes: DocNode[]): FlatDoc[] {
+function flatten(nodes: DocumentFile[]): FlatDoc[] {
   return nodes.flatMap((node) => [
     { url: node.url, title: node.title, subtitle: node.subtitle ?? "", file: node.file },
     ...(node.children ? flatten(node.children) : []),

@@ -79,15 +79,19 @@ export function Topbar({ sidebar, sidebarOpen, onSearch, goHome, onRandom }: Pro
     <header className="Topbar">
       <div className="Topbar-left">
         <Hamburger open={sidebarOpen} onClick={sidebar} />
+
         <Tooltip text={t.topbar.home} pos="bottom">
-          <a onClick={goHome} style={{ textDecoration: "none", marginTop: "4px" }}>
+          <div onClick={goHome} style={{ textDecoration: "none", marginTop: "4px" }}>
             <Title title="Wiqi" />
-          </a>
+          </div>
         </Tooltip>
+
         <Line />
+
         <Tooltip text={t.topbar.view_source} pos="bottom">
           <Button text="View-source" icon={<Icon icon="source" size={20} />} action="source" />
         </Tooltip>
+
         <Tooltip text={t.topbar.random} pos="bottom">
           <Button icon={<Icon icon="shuffle" size={20} />} onClick={onRandom} />
         </Tooltip>
@@ -161,7 +165,10 @@ export function Topbar({ sidebar, sidebarOpen, onSearch, goHome, onRandom }: Pro
           )}
         </ProfileMenuContainer>
 
-        <a href="https://github.com/QUAMAND/Wiqi">
+        <a 
+          href="https://github.com/QUAMAND/Wiqi"
+          target="_blank"
+          rel="noopener noreferrer">
           <Icon icon="github" size={20} color="var(--bg-raised)" />
         </a>
       </div>
