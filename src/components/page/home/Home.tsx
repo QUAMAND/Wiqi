@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Icon } from "../../common/Icon";
 import "./home.css";
 import { useSetting } from "../../../hooks/Settings";
@@ -14,30 +14,19 @@ interface HomeNewsProps {
 
 function HomeNews({ data, loading }: HomeNewsProps) {
   const {t} = useSetting();
-  const [news, setNews] = useState<NewsItem[]>([]);
 
-  useEffect(() => {
-    if (!data) return;
+  const news = useMemo(() => {
+  if (!data) return [];
 
-    const entries = [...data.entries];
-    const sortByDateDesc = (a: NewsItem, b: NewsItem) =>
-      new Date(b.date).getTime() - new Date(a.date).getTime();
+  const sortByDateDesc = (a: NewsItem, b: NewsItem) =>
+    new Date(b.date).getTime() - new Date(a.date).getTime();
 
-    const latestRelease = entries
-      .filter((item) => item.type === "release")
-      .sort(sortByDateDesc)[0];
-    const latestSnapshot = entries
-      .filter((item) => item.type === "snapshot")
-      .sort(sortByDateDesc)[0];
+  const entries = data.entries;
+  const latestRelease = entries.filter((item) => item.type === "release").sort(sortByDateDesc)[0];
+  const latestSnapshot = entries.filter((item) => item.type === "snapshot").sort(sortByDateDesc)[0];
 
-    const latest: NewsItem[] = [];
-    if (latestSnapshot) latest.push(latestSnapshot);
-    if (latestRelease) latest.push(latestRelease);
-
-    latest.sort(sortByDateDesc);
-
-    setNews(latest);
-  }, [data]);
+  return [latestSnapshot, latestRelease].filter(Boolean).sort(sortByDateDesc);
+}, [data]);
 
   return (
     <section className="Home-section">
@@ -69,7 +58,7 @@ function HomeNews({ data, loading }: HomeNewsProps) {
                     &nbsp;
                     &nbsp;
                     &nbsp;
-                    {item.type === "release" ? <Icon icon="version" size={12} color="var(--accent-green)"/> : <Icon icon="version" size={12} color="var(--accent-red)"/>}
+                    <Icon icon="version" size={12} color={item.type === "release" ? "var(--accent-green)" : "var(--accent-red)"} />
                     &nbsp;
                     <span
                       className={
@@ -93,6 +82,17 @@ function HomeNews({ data, loading }: HomeNewsProps) {
   );
 }
 
+const LINKS = [
+  { key: "official",   href: "https://www.minecraft.net" },
+  { key: "wiki",       href: "https://minecraft.wiki" },
+  { key: "mojira",     href: "https://mojira.dev/?project=MC" },
+  { key: "mccgadgets", href: "https://www.mcc-gadgets.com/java/changelog" },
+  { key: "mcstacker",  href: "https://mcstacker.net" },
+  { key: "misode",     href: "https://misode.github.io" },
+  { key: "mcsrc",      href: "https://mcsrc.dev" },
+  { key: "bdengine",   href: "https://bdengine.app" },
+  { key: "brigadier",  href: "https://github.com/Mojang/brigadier" },
+] as const;
 export function Home() {
   const {t} = useSetting();
   const { data, loading } = useFetch(() =>
@@ -121,114 +121,15 @@ export function Home() {
       <section className="Home-section">
         <h2>{t.home.link}</h2>
         <div className="Home-links">
-          <a
-            href="https://www.minecraft.net"
-            target="_blank"
-            rel="noreferrer"
-            className="Home-link-item"
-          >
-            <strong>
-              {t.home.link_official}
-              <Icon icon="link" size={16} color="var(--accent-blue)" />
-            </strong>
-            <span>{t.home.official}</span>
-          </a>
-          <a
-            href="https://minecraft.wiki"
-            target="_blank"
-            rel="noreferrer"
-            className="Home-link-item"
-          >
-            <strong>
-              {t.home.link_wiki}
-              <Icon icon="link" size={16} color="var(--accent-blue)" />
-            </strong>
-            <span>{t.home.wiki}</span>
-          </a>
-          <a
-            href="https://mojira.dev/?project=MC"
-            target="_blank"
-            rel="noreferrer"
-            className="Home-link-item"
-          >
-            <strong>
-              {t.home.link_mojira}
-              <Icon icon="link" size={16} color="var(--accent-blue)" />
-            </strong>
-            <span>{t.home.mojira}</span>
-          </a>
-          <a
-            href="https://www.mcc-gadgets.com/java/changelog"
-            target="_blank"
-            rel="noreferrer"
-            className="Home-link-item"
-          >
-            <strong>
-              {t.home.link_mccgadgets}
-              <Icon icon="link" size={16} color="var(--accent-blue)" />
-            </strong>
-            <span>{t.home.mccgadgets}</span>
-          </a>
-          <a
-            href="https://mcstacker.net"
-            target="_blank"
-            rel="noreferrer"
-            className="Home-link-item"
-          >
-            <strong>
-              {t.home.link_mcstacker}
-              <Icon icon="link" size={16} color="var(--accent-blue)" />
-            </strong>
-            <span>{t.home.mcstacker}</span>
-          </a>
-          <a
-            href="https://misode.github.io"
-            target="_blank"
-            rel="noreferrer"
-            className="Home-link-item"
-          >
-            <strong>
-              {t.home.link_misode}
-              <Icon icon="link" size={16} color="var(--accent-blue)" />
-            </strong>
-            <span>{t.home.misode}</span>
-          </a>
-          <a
-            href="https://mcsrc.dev"
-            target="_blank"
-            rel="noreferrer"
-            className="Home-link-item"
-          >
-            <strong>
-              {t.home.link_mcsrc}
-              <Icon icon="link" size={16} color="var(--accent-blue)" />
-            </strong>
-            <span>{t.home.mcsrc}</span>
-          </a>
-          <a
-            href="https://bdengine.app"
-            target="_blank"
-            rel="noreferrer"
-            className="Home-link-item"
-          >
-            <strong>
-              {t.home.link_bdengine}
-              <Icon icon="link" size={16} color="var(--accent-blue)" />
-            </strong>
-            <span>{t.home.bdengine}</span>
-          </a>
-          <a
-            href="https://github.com/Mojang/brigadier"
-            target="_blank"
-            rel="noreferrer"
-            className="Home-link-item"
-          >
-            <strong>
-              {t.home.link_brigadier}
-              <Icon icon="link" size={16} color="var(--accent-blue)" />
-            </strong>
-            <span>{t.home.brigadier}</span>
-          </a>
+          {LINKS.map(({ key, href }) => (
+            <a key={key} href={href} target="_blank" rel="noreferrer" className="Home-link-item">
+              <strong>
+                {t.home[`link_${key}` as keyof typeof t.home]}
+                <Icon icon="link" size={16} color="var(--accent-blue)" />
+              </strong>
+              <span>{t.home[key as keyof typeof t.home]}</span>
+            </a>
+          ))}
         </div>
       </section>
     </div>

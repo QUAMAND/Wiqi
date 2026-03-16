@@ -6,7 +6,7 @@ import {
   useEffect,
   useState,
 } from "react";
-import { getI18n, LangItems, LangKeys } from "../data/lang";
+import { getI18n, LangKeys } from "../data/lang";
 
 type themes = "dark" | "light";
 type langs = LangKeys;
@@ -24,9 +24,11 @@ interface Props {
 export const useSetting = () => {
   const context = useContext(SettingContext);
 
-  if (!context) throw new Error("useSetting must be used inside Provider");
-
-  return context;
+  if (context) {
+    return context;
+  } else {
+    throw new Error("useSetting must be used inside Provider")
+  }
 };
 
 /*
@@ -60,7 +62,6 @@ export const Provider = ({ children }: { children: ReactNode }) => {
     for (const k in setting) {
       localStorage.setItem(k, String(setting[k as keyof Props]));
     }
-    // 테마 적용
     document.documentElement.setAttribute("data-theme", setting.theme);
   }, [setting]);
 

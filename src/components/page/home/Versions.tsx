@@ -1,7 +1,8 @@
-import { useState, useEffect } from "react";
+import { useMemo, useState } from "react";
 import "./versions.css";
 import { Icon } from "../../common/Icon";
 import { useSetting } from "../../../hooks/Settings";
+import { useFetch } from "../../../hooks/useFetch";
 
 interface VersionItem {
   type: string;
@@ -12,27 +13,17 @@ interface VersionItem {
 
 export function Versions() {
   const { t } = useSetting();
-  const [entries, setEntries] = useState<VersionItem[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
   const [showCount, setShowCount] = useState(200);
   const [openVersions, setOpenVersions] = useState<Record<string, boolean>>({});
   const [versionContent, setVersionContent] = useState<Record<string, string>>({});
 
   // 버전 리스트 가져오기
-  useEffect(() => {
-    fetch("https://launchercontent.mojang.com/v2/javaPatchNotes.json")
-        .then((res) => res.json())
-        .then((json) => {
-          setEntries(json.entries || []);
-          setLoading(false);
-        })
-        .catch((err) => {
-          console.error(err);
-          setError(t.not_found_news);
-          setLoading(false);
-        });
-  }, [t]);
+  const { data: entries, error, loading } = useFetch(
+    () => fetch("https://launchercontent.mojang.com/v2/javaPatchNotes.json")
+      .then((res) => res.json())
+      .then((json) => json.entries || []),
+    []
+  );
 
   // 클릭 시 Technical Changes 토글
   const toggleVersion = async (entry: VersionItem) => {
@@ -47,7 +38,7 @@ export function Versions() {
       const res = await fetch(`https://launchercontent.mojang.com/v2/${entry.contentPath}`);
       const json = await res.json();
 
-      const techChanges = extractTechnicalChanges(json.body || "");
+      const techChanges = extractTechnicalChanges(json.body || "", t.not_found_doc);
       setVersionContent((prev) => ({
         ...prev,
         [entry.version]: techChanges,
@@ -61,9 +52,16 @@ export function Versions() {
     }
   };
 
+const VERSION_COLORS = {
+  pre: "var(--accent-gold)",
+  rc: "var(--accent-purple)",
+  release: "var(--accent-green)",
+  default: "var(--accent-red)",
+} as const;
+
   // HTML 문자열에서 Technical Changes 추출
-  const extractTechnicalChanges = (html: string) => {
-    if (!html) return t.not_found_doc;
+  const extractTechnicalChanges = (html: string, fallback: string): string => {
+    if (!html) return fallback;
 
     const parser = new DOMParser();
     const doc = parser.parseFromString(html, "text/html");
@@ -82,22 +80,24 @@ export function Versions() {
       next = next.nextElementSibling;
     }
 
-    return content || t.not_found_doc;
+    return content || fallback;
   };
 
-  if (loading) return <p>{t.home.loading}</p>;
-  if (error) return <p>{error}</p>;
-  if (entries.length === 0) return <p>{t.not_found_news}</p>;
-
-  const sortEntries = [...entries].sort(
-    (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+  // 바뀔 때만 재정렬
+  const sortEntries = useMemo(
+    () => [...entries ?? []].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()),
+    [entries]
   );
 
-  const getVersionColor = (entry: VersionItem) => {
-    if (entry.version.toLowerCase().includes("pre")) return "var(--accent-gold)";
-    if (entry.version.toLocaleLowerCase().includes("rc")) return "var(--accent-purple)";
-    if (entry.type === "release") return "var(--accent-green)";
-    return "var(--accent-red)";
+  if (loading) return <p>{t.home.loading}</p>;
+  if (error || entries.length === 0) return <p>{t.not_found_news}</p>;
+
+  const getVersionColor = (entry: VersionItem): string => {
+    const v = entry.version.toLowerCase();
+    if (v.includes("pre")) return VERSION_COLORS.pre;
+    if (v.includes("rc")) return VERSION_COLORS.rc;
+    if (entry.type === "release") return VERSION_COLORS.release;
+    return VERSION_COLORS.default;
   };
 
   return (
